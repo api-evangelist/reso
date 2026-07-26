@@ -1,0 +1,368 @@
+aid: reso
+name: RESO (Real Estate Standards Organization)
+review:
+  question: >-
+    Is there a public, self-serve developer surface at RESO, and does RESO's certification of
+    the real estate machine-readable contract translate into a reachable API?
+  answer: >-
+    Partly. RESO publishes a genuinely open, anonymously downloadable machine-readable contract
+    (Web API Core, Data Dictionary, reference OData EDMX metadata and Data Dictionary JSON) and
+    a public certification directory. RESO itself operates no production API and holds no
+    listing data. Certification is conformance, not reachability: every certified endpoint is
+    run by an individual MLS and credentials require a signed data licence with that MLS.
+  date: '2026-07-26'
+  reviewer: API Evangelist
+  tier: industry-body
+  homeMarket: United States
+
+resoPosture:
+  summary: >-
+    RESO is the certifying body itself, not a certified party. It authors and ratifies the
+    standards that NAR requires REALTOR-association-owned MLSs to implement, and it runs the
+    certification programme and directory. It is not itself RESO-certified, and it exposes no
+    RESO Web API endpoint.
+  resoCertified: false
+  resoCertifiedRationale: >-
+    "Certified" is a status RESO grants to other organizations' systems. RESO does not appear
+    in its own certification directory as a certified system because it operates none.
+  standardsPublished:
+    - name: RESO Web API Core
+      rcp: RCP-37
+      versions: ['2.0.0 (ratified Jan 2021)', '2.1.0 (ratified Dec 2023)']
+      basis: Profile of OASIS OData 4.0 / 4.01
+      url: https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md
+      httpStatus: 200
+      access: free, anonymous, no login
+    - name: RESO Data Dictionary
+      rcp: RCP-36
+      versions: ['1.7 (ratified Jan 2021)', '2.0 (ratified Nov 2023)', '2.1 (in process)']
+      url: https://github.com/RESOStandards/transport/blob/main/proposals/data-dictionary.md
+      httpStatus: 200
+      access: free, anonymous, no login
+    - name: RESO Common Format (RCF)
+      rcp: RCP-25
+      versions: ['1.0.0 (Nov 2023)', '1.7 shown on transport.reso.org']
+      note: Lightweight JSON format for non-MLS organizations (assessment firms, tour operators, photographers).
+      url: https://github.com/RESOStandards/transport/blob/main/proposals/reso-common-format.md
+      httpStatus: 200
+    - name: Push Replication with EntityEvent and Webhooks
+      rcp: RCP-28
+      versions: ['1.0.0 (Dec 2023)', '1.0.1 shown on transport.reso.org']
+      url: https://github.com/RESOStandards/transport/blob/main/proposals/webhooks-push.md
+      httpStatus: 200
+      note: This is the sector's webhook/event standard. It is a specification, not a service RESO runs.
+    - name: EntityEvent Resource and Replication
+      rcp: RCP-27
+      versions: ['1.0.0 (Dec 2023)', '2.0.2 shown on transport.reso.org']
+      url: https://github.com/RESOStandards/transport/blob/main/proposals/entity-events.md
+      httpStatus: 200
+    - name: Web API Validation Expressions
+      rcp: RCP-19
+      versions: ['1.0.0 (Dec 2023)']
+      url: https://github.com/RESOStandards/transport/blob/main/proposals/validation-expressions.md
+      httpStatus: 200
+    - name: Web API Add/Edit
+      rcp: RCP-10
+      versions: ['1.0.0 (Dec 2023)', '2.0.0 shown on transport.reso.org']
+      note: The write side of the standard - listings can be created and edited over the Web API.
+    - name: Universal Parcel Identifier (UPI)
+      versions: ['2.0 (URN-based)']
+      url: https://www.reso.org/universal-parcel-identifier/
+      httpStatus: 200
+      note: >-
+        Renamed from Universal Property Identifier to Universal Parcel Identifier at 2.0, which
+        introduced a URN-based model. A public UPI Builder is served at https://upi.reso.org/builder/
+        (HTTP 200). Source repo https://github.com/RESOStandards/reso-upi.
+  standardsAreFreelyDownloadable: true
+  standardsGateNote: >-
+    Two distinct paths to the same artifacts. Downloads linked from www.reso.org are wrapped in a
+    EULA click-through (https://www.reso.org/eula/, HTTP 200), and the transport repo ships a
+    License.txt reading "By downloading these resources, you confirm that you agree to the RESO
+    EULA". But the identical specifications and reference artifacts are served anonymously and
+    unauthenticated from https://transport.reso.org/ (HTTP 200) and
+    https://github.com/RESOStandards (HTTP 200) - every artifact in openapi/ here was fetched
+    with HTTP 200 and no credentials. So: EULA-wrapped on the website, effectively open on GitHub.
+  certificationDirectory:
+    publicList:
+      url: https://www.reso.org/certificates/
+      httpStatus: 200
+      login: not required
+      shows: >-
+        Organization name, Unique Organization Identifier (UOI), certification date, and status
+        (Certified Current / Passed Current / Certified Legacy / Uncertified) for hundreds of MLSs
+        and data providers, with a link to a per-organization summary.
+    analyticsPortal:
+      url: https://certification.reso.org/
+      httpStatus: 200
+      note: >-
+        RESO Analytics endorsement directory. An Express/nginx single-page app that serves the same
+        1312-byte index.html shell for every path probed (/, /endorsements, /api, /api/v1/...), so
+        no documented public JSON API for certification data was found. Endorsement records are
+        rendered client-side; per-organization summaries are addressed as /summary/{UOI}.
+    certifiedFor: Data Dictionary 2.0, Web API Core 2.0.0, and RESO Common Format (RCF)
+    cost: Complimentary for RESO members; non-members pay per https://www.reso.org/certification-fee-schedule/ (HTTP 200)
+  mandate:
+    body: National Association of REALTORS (NAR), not a government regulator
+    instrument: Handbook on Multiple Listing Policy, Operational Issues Section 12, Policy Statement 7.90
+    url: https://www.nar.realtor/handbook-on-multiple-listing-policy/operational-issues-section-12-real-estate-transaction-standards-rets-policy-statement-790
+    httpStatus: 200
+    text: >-
+      "MLS organizations owned and operated by associations of REALTORS will implement the RESO
+      Standards including: the RESO Data Dictionary by January 1, 2016; the RESO Web API by
+      June 30, 2016 and will keep current by implementing new releases of RESO Standards within
+      one (1) year from ratification."
+    scope: Association-owned and operated MLSs. Independent MLSs, brokers and vendors may certify voluntarily.
+  certificationIsNotReachability: >-
+    This is the finding. RESO states plainly on https://www.reso.org/reso-web-api/ that "Access to
+    data from the Web API is gained through local MLSs. After agreeing to an MLS's data use and
+    licensing policies, data recipients work directly with that MLS's software provider or
+    technical staff to receive credentials," and that "RESO does not provide MLS real estate data.
+    RESO creates data standards." A certified MLS endpoint therefore proves conformance to an
+    OData contract and proves nothing about whether a developer can call it. There is no RESO
+    registry of endpoint base URLs, and no endpoint RESO operates.
+
+accessGate:
+  classification: membership-required
+  appliesTo: RESO itself (the organization profiled here), not to the listing data behind certified endpoints.
+  whatADeveloperMustDo:
+    toReadTheStandards: >-
+      Nothing. No account, no login, no key. Specifications, reference OData EDMX metadata,
+      Data Dictionary JSON/XLSX, the RESO Commander testing tool and the reference server source
+      are all anonymously downloadable from transport.reso.org and github.com/RESOStandards.
+      Downloads routed through www.reso.org present a EULA click-through.
+    toReadTheCertificationDirectory: >-
+      Nothing. https://www.reso.org/certificates/ and https://certification.reso.org/ are public,
+      no login.
+    toGetCertified: >-
+      Join RESO (or pay the non-member fee schedule) and submit access credentials for the system
+      under test. Membership classes A-F, dues published as roughly $275-$50,000 per year scaled
+      by class and size (Class B technology $550-$50,000; Class C MLSs $275-$35,000; Class D
+      brokers $550-$25,000; Class E lending $550-$28,750). Certification is complimentary for
+      members. Source https://www.reso.org/membership/ (HTTP 200).
+    toActuallyCallRealEstateData: >-
+      Not obtainable from RESO at all. A developer must join or contract with a specific local MLS,
+      sign that MLS's data use and licensing policy (an IDX or VOW agreement, a broker or agent
+      sponsorship, or a reseller agreement with an aggregator such as Bridge, Trestle, MLS Grid or
+      Spark), and then receive OAuth2 credentials from that MLS's software provider. This is a
+      licence-agreement / membership-required gate roughly 500 times over, once per MLS.
+  selfServeDeveloperPortal: false
+  developerPortalNote: >-
+    No developer.reso.org, developers.reso.org, api.reso.org or docs.reso.org host exists - all
+    four fail DNS resolution (curl exit 000). The closest thing to a developer portal is
+    https://transport.reso.org/ (HTTP 200), the specifications site, plus the GitHub organization.
+    Neither issues credentials, because there is nothing to issue credentials for.
+
+openData:
+  hasOpenData: false
+  note: >-
+    RESO publishes open SPECIFICATIONS but no open DATA. There is no free, publicly callable
+    dataset of listings, parcels or licensees. The Data Dictionary JSON and EDMX artifacts in
+    openapi/ are schema, not records. The US has no government counterweight equivalent to
+    HM Land Registry Price Paid or Ordnance Survey open products - US residential listing data
+    is private cooperative property, licensed per MLS.
+
+authModel:
+  standardMandated: >-
+    Web API Core requires OAuth2. From the specification: "Providers MUST use either OAuth2 Bearer
+    tokens or Client Credentials for authentication (RCP-026)" and "RESO Web API servers MUST
+    conform to OData conventions with respect to metadata, query, and response formats as well as
+    HTTP, TLS, and OAuth2 for application layer protocol, transport security, and authentication
+    requirements." Dependencies line of the spec reads "OData 4.0 or 4.01 / TLS 1.2+ / OAuth 2
+    (Auth Token or Client Credentials)."
+  issuedBy: The individual MLS or its software provider, never RESO.
+  resoOwnAuth: >-
+    None discovered. https://www.reso.org/.well-known/openid-configuration does not serve a
+    discovery document; the request 302s off-site and terminates at https://www.fbi.gov/ with
+    HTTP 403 - a WordPress security-plugin redirect, not an identity endpoint. Same behaviour for
+    /.well-known/security.txt. No RESO-operated OpenID Connect or SAML surface was found.
+
+surfaces:
+  webhooks:
+    exists: as a standard, not as a service
+    detail: RCP-28 Push Replication with EntityEvent and Webhooks is a ratified RESO endorsement. RESO delivers no webhooks itself.
+  events:
+    exists: as a standard
+    detail: RCP-27 EntityEvent Resource and Replication defines the change-feed model MLS servers implement.
+  graphql:
+    exists: false
+  sdks:
+    exists: true
+    detail: >-
+      Open-source reference clients and tools published by RESO on GitHub - web-api-commander
+      (Java certification/testing tool), RESO-WebAPI-Client-PHP, reso-tools, and UPI Builder
+      libraries for PHP, .NET, Java, JavaScript and Ruby (several JavaScript/Ruby ones are stubs).
+  postman:
+    exists: false
+    detail: No RESO-published Postman collection or workspace was found.
+  openapi:
+    exists: false
+    detail: >-
+      RESO does not publish OpenAPI. The RESO machine-readable contract is OData CSDL/EDMX - the
+      $metadata document - which is the equivalent artifact for this sector and is what was
+      harvested into openapi/. https://www.reso.org/openapi.json and
+      https://www.reso.org/swagger.json both return HTTP 404.
+  referenceServer:
+    exists: true
+    public: false
+    detail: >-
+      https://github.com/RESOStandards/reso-web-api-reference-server is a self-hosted, Docker-built
+      RESO Web API and Data Dictionary compliant server. Its README points at
+      http://localhost:8080/core/2.0.0/$metadata. RESO hosts no public instance.
+
+probes:
+  date: '2026-07-26'
+  results:
+    - url: https://www.reso.org/
+      status: 200
+    - url: https://reso.org/
+      status: 200
+      note: redirects to https://www.reso.org/
+    - url: https://developer.reso.org/
+      status: 000
+      note: DNS does not resolve
+    - url: https://developers.reso.org/
+      status: 000
+      note: DNS does not resolve
+    - url: https://api.reso.org/
+      status: 000
+      note: DNS does not resolve - this host appears only as an illustrative example inside the Web API Core spec
+    - url: https://docs.reso.org/
+      status: 000
+      note: DNS does not resolve
+    - url: https://transport.reso.org/
+      status: 200
+      note: The real specifications site, no login
+    - url: https://certification.reso.org/
+      status: 200
+      note: SPA shell; every probed path returns the same 1312-byte index.html
+    - url: https://www.reso.org/certificates/
+      status: 200
+    - url: https://www.reso.org/specs/
+      status: 200
+    - url: https://www.reso.org/reso-web-api/
+      status: 200
+    - url: https://www.reso.org/data-dictionary/
+      status: 200
+    - url: https://www.reso.org/certification/
+      status: 200
+    - url: https://www.reso.org/universal-parcel-identifier/
+      status: 200
+    - url: https://www.reso.org/reso-common-format/
+      status: 200
+    - url: https://www.reso.org/membership/
+      status: 200
+    - url: https://www.reso.org/eula/
+      status: 200
+    - url: https://www.reso.org/certification-fee-schedule/
+      status: 200
+    - url: https://ddwiki.reso.org/
+      status: 200
+      note: redirects to https://dd.reso.org/
+    - url: https://upi.reso.org/builder/
+      status: 200
+    - url: https://services.reso.org/
+      status: 404
+      note: Responds application/json 404 on every path probed; no documented API, nothing harvestable
+    - url: https://www.reso.org/openapi.json
+      status: 404
+    - url: https://www.reso.org/swagger.json
+      status: 404
+    - url: https://www.reso.org/llms.txt
+      status: 404
+    - url: https://www.reso.org/.well-known/openid-configuration
+      status: 403
+      note: 302s off-domain and terminates at https://www.fbi.gov/ - WordPress security-plugin behaviour, not an identity endpoint
+    - url: https://www.reso.org/.well-known/security.txt
+      status: 403
+      note: same off-domain redirect
+    - url: https://github.com/RESOStandards
+      status: 200
+      note: 24 public repositories
+
+harvestedArtifacts:
+  directory: openapi/
+  fetchedOn: '2026-07-26'
+  sourceRepo: https://github.com/RESOStandards/transport
+  license: RESO EULA (https://www.reso.org/eula/) as declared in the repo License.txt
+  validated: >-
+    All six XML documents parse with xml.etree and have root element
+    {http://docs.oasis-open.org/odata/ns/edmx}Edmx. All three JSON documents parse and expose
+    keys description, version, generatedOn, resources, models, fields.
+  files:
+    - path: openapi/reso-dd-1.7-enum.xml
+      type: OData EDMX ($metadata-equivalent CSDL)
+      sourceURL: https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/edmx/dd-1.7-enum.xml
+      httpStatus: 200
+      bytes: 566584
+    - path: openapi/reso-dd-1.7-lookup-resource.xml
+      type: OData EDMX ($metadata-equivalent CSDL)
+      sourceURL: https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/edmx/dd-1.7-lookup-resource.xml
+      httpStatus: 200
+      bytes: 149570
+    - path: openapi/reso-dd-2.0-enum.xml
+      type: OData EDMX ($metadata-equivalent CSDL)
+      sourceURL: https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/edmx/dd-2.0-enum.xml
+      httpStatus: 200
+      bytes: 727774
+    - path: openapi/reso-dd-2.0-lookup-resource.xml
+      type: OData EDMX ($metadata-equivalent CSDL)
+      sourceURL: https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/edmx/dd-2.0-lookup-resource.xml
+      httpStatus: 200
+      bytes: 196562
+    - path: openapi/reso-dd-2.1-enum.xml
+      type: OData EDMX ($metadata-equivalent CSDL)
+      sourceURL: https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/edmx/dd-2.1-enum.xml
+      httpStatus: 200
+      bytes: 830849
+    - path: openapi/reso-dd-2.1-lookup-resource.xml
+      type: OData EDMX ($metadata-equivalent CSDL)
+      sourceURL: https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/edmx/dd-2.1-lookup-resource.xml
+      httpStatus: 200
+      bytes: 248445
+    - path: openapi/reso-dd-1.7.json
+      type: RESO Data Dictionary machine-readable reference (JSON)
+      sourceURL: https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/json/dd-1.7.json
+      httpStatus: 200
+      bytes: 3099263
+    - path: openapi/reso-dd-2.0.json
+      type: RESO Data Dictionary machine-readable reference (JSON)
+      sourceURL: https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/json/dd-2.0.json
+      httpStatus: 200
+      bytes: 3979817
+    - path: openapi/reso-dd-2.1.json
+      type: RESO Data Dictionary machine-readable reference (JSON)
+      sourceURL: https://raw.githubusercontent.com/RESOStandards/transport/main/references/dd/json/dd-2.1.json
+      httpStatus: 200
+      bytes: 4570222
+
+sources:
+  - url: https://www.reso.org/reso-web-api/
+    type: Documentation
+    note: Source of the "access is gained through local MLSs" and "RESO does not provide MLS real estate data" statements.
+  - url: https://www.reso.org/certification/
+    type: Certification
+    note: Names the three certifiable standards and the complimentary-for-members cost model.
+  - url: https://www.reso.org/specs/
+    type: Specification
+    note: Specification directory listing Web API Core 2.0.0, Data Dictionary 1.7/2.0/2.1 and the reference metadata.
+  - url: https://transport.reso.org/
+    type: Specification
+    note: Ratified endorsements with versions, publicly readable, no login.
+  - url: https://github.com/RESOStandards/transport
+    type: SourceCode
+    note: Canonical home of every specification and of the EDMX/JSON reference artifacts harvested here.
+  - url: https://www.reso.org/membership/
+    type: Membership
+    note: Membership classes A-F and published dues ranges.
+  - url: https://www.nar.realtor/handbook-on-multiple-listing-policy/operational-issues-section-12-real-estate-transaction-standards-rets-policy-statement-790
+    type: Regulation
+    note: NAR Policy Statement 7.90, the mandate behind RESO adoption.
+
+conclusion: >-
+  RESO is the cleanest example in the study of a mandated machine-readable contract that is also
+  completely unreachable as data. The contract is free, versioned, OData-based, git-hosted and
+  anonymously downloadable; the certification directory is public; and none of that gets a
+  developer a single listing. Two facts, held apart: RESO certification is real and enforced by
+  NAR for association-owned MLSs, and access to the data behind any certified endpoint requires a
+  signed licence with one of roughly 500 individual MLSs. RESO operates no API, issues no keys,
+  and stores no listings.
