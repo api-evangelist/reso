@@ -1,0 +1,121 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://tools.reso.org/releases/
+- https://tools.reso.org/announcements/
+- https://github.com/RESOStandards/reso-tools/releases
+- https://github.com/RESOStandards/web-api-commander/releases
+- https://github.com/RESOStandards/transport/releases
+- https://transport.reso.org/policy-changes/
+note: >-
+  RESO keeps three separate change surfaces and they move at very different speeds. The
+  SPECIFICATIONS change slowly, by ratification (see lifecycle/reso-lifecycle.yml). The TOOLING
+  changes weekly - the RESO Tools monorepo has a dated release-notes page at tools.reso.org/releases
+  with 38 entries since 2026-03-02. The POLICY changes annually via the RESO Board. This artifact
+  captures the recent tooling window plus the specification and policy milestones; the live pages
+  remain the source of truth.
+scheme: semver
+changelogs:
+- name: RESO Tools (SDK, reference server, certification CLI, MCP server)
+  url: https://tools.reso.org/releases/
+  repo: https://github.com/RESOStandards/reso-tools
+  current_version: v0.11
+  entry_count_published: 38
+  first_entry: '2026-03-02'
+- name: RESO Transport specifications
+  url: https://transport.reso.org/
+  repo: https://github.com/RESOStandards/transport
+  current: 7 ratified standards, 14 proposals in progress
+- name: RESO policy changes
+  url: https://transport.reso.org/policy-changes/
+  current: Effective December 2025
+- name: RESO Commander (legacy Java tool)
+  url: https://github.com/RESOStandards/web-api-commander/releases
+  current_version: v2.0.0-dd-2.0-initial-release
+entries:
+- version: v0.11
+  name: Elevenses
+  component: reso-tools
+  date: '2026-04-24'
+  date_note: GitHub pre-release tag "packaging-test" dated 2026-04-24; the release-notes page lists v0.11 without a date.
+  breaking: false
+  highlights:
+  - Saved Configs and Connection Manager - separate SavedCredentials and SavedCertConfig models, OS-keychain storage via safeStorage, import/export with collision detection.
+  - SQLite job store replaces localStorage job persistence in the Electron main process (jobs + job_steps tables, 19 unit tests).
+  - Variations Review - collaborative review workflow wired to services.reso.org/v2/certification/variations/*, with locking, inline comments and Fast Track gating.
+  - 'Cert API auth scheme corrected: Basic auth for admin accounts, ApiKey auth for provider accounts.'
+- version: v0.10
+  name: Ten Ichi
+  component: reso-tools
+  date: '2026-04-17'
+  breaking: false
+- version: v0.9
+  component: reso-tools
+  date: '2026-04-14'
+  release_name: To the Nines
+  breaking: false
+- version: v0.8
+  component: reso-tools
+  date: '2026-04-12'
+  release_name: Eight Days a Week
+  breaking: false
+  highlights:
+  - MCP server reaches 0.8.0 alongside the reference server.
+- version: v0.7
+  component: reso-tools
+  date: '2026-04-06'
+  release_name: Return of the MCP
+  breaking: false
+  highlights:
+  - Continued build-out of the MCP server for AI agents.
+- version: v0.6
+  component: reso-tools
+  date: '2026-04-06'
+  release_name: The MCP Strikes Back
+  breaking: false
+  highlights:
+  - Introduces the RESO MCP server (OData query, validation, certification tools for AI agents).
+- version: v0.4
+  component: reso-tools
+  date: '2026-04-05'
+  breaking: false
+  highlights:
+  - 'Security fixes: navigateTo script injection (Critical) and release URL validation (Critical) - see tools.reso.org/security/.'
+- version: v0.3
+  component: reso-tools
+  date: '2026-04-03'
+  release_name: Cache Me If You Can
+  breaking: false
+- version: v0.2
+  component: reso-tools
+  date: '2026-03-10'
+  release_name: There's an App for That
+  breaking: false
+- version: v0.1
+  component: reso-tools
+  date: '2026-03-06'
+  breaking: false
+- version: npm publication
+  component: reso-tools
+  date: '2026-07-19'
+  breaking: false
+  highlights:
+  - Seven @reso-standards packages published to npm - reso-client, reso-certification, reso-common, reso-validation, reso-metadata-utils, odata-expression-parser, reso-reference-server.
+specification_milestones:
+- {date: '2023-12', event: Web API Core 2.1.0 ratified, rcp: RCP-37, breaking: true}
+- {date: '2023-12', event: Web API Add/Edit 2.0.0 ratified, rcp: RCP-10, breaking: true}
+- {date: '2023-12', event: EntityEvent Resource and Replication 2.0.2 ratified, rcp: RCP-27}
+- {date: '2023-12', event: Push Replication with Webhooks 1.0.1 ratified, rcp: RCP-28}
+- {date: '2023-12', event: Validation Expressions 1.0.0 ratified, rcp: RCP-19}
+- {date: '2023-11', event: Data Dictionary 2.0 ratified, rcp: RCP-36/40, breaking: true}
+- {date: '2023-11', event: RESO Common Format 1.7, rcp: RCP-25}
+- {date: '2021-01', event: Web API Core 2.0.0 ratified, rcp: RCP-37, breaking: true}
+- {date: '2021-01', event: Data Dictionary 1.7 ratified, rcp: RCP-36}
+policy_milestones:
+- date: '2025-12'
+  event: RESO Board of Directors policy changes take effect
+  url: https://transport.reso.org/policy-changes/
+  highlights:
+  - RESO endorsements will expire after two years.
+  - Minor Data Dictionary versions no longer require Board ratification, and may contain no breaking changes.
+  - Adding new testing rules to existing data elements is a major change.

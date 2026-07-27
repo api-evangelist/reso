@@ -1,0 +1,39 @@
+generated: '2026-07-26'
+method: generated
+source:
+- https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md
+- https://github.com/RESOStandards/transport/blob/main/proposals/entity-events.md
+- https://github.com/RESOStandards/transport/blob/main/proposals/webhooks-push.md
+- https://github.com/RESOStandards/reso-tools
+note: >-
+  RESO publishes no OpenAPI, so these skills are grounded in the ratified specification's OData
+  request grammar, the reference EDMX/Data Dictionary harvested into openapi/, and the real tool and
+  command names published by RESO Tools. No operationIds are invented - RESO has none.
+skills:
+- file: reso-query-a-certified-server.md
+  name: Query a RESO-certified Web API server
+  api: RESO Web API Core 2.1.0 (RCP-37)
+  contract: openapi/reso-dd-2.1-enum.xml
+  operations: ['GET {service-root}/$metadata', 'GET {service-root}/{Resource}']
+  mcp_tools: [authenticate, metadata, query, parse-filter]
+- file: reso-replicate-with-entityevent.md
+  name: Replicate a RESO feed with EntityEvent and webhooks
+  api: EntityEvent 2.0.2 (RCP-27) + Push Replication with Webhooks 1.0.1 (RCP-28)
+  contract: openapi/reso-dd-2.1-enum.xml
+  operations: ['GET {service-root}/EntityEvent', 'GET {service-root}/{Resource}(''{Key}'')', 'POST {consumer-endpoint}']
+  mcp_tools: [authenticate, query]
+- file: reso-certify-a-server.md
+  name: Certify a server against RESO standards
+  api: RESO Certification (DD 2.0, Web API Core, Add/Edit RCP-010, EntityEvent RCP-027)
+  contract: openapi/reso-dd-2.1.json
+  operations: [reso-cert dd, reso-cert core, reso-cert add-edit, reso-cert entity-event]
+  mcp_tools: [run-compliance, metadata-report, authenticate]
+related_artifacts:
+- conventions/reso-conventions.yml
+- errors/reso-problem-types.yml
+- authentication/reso-authentication.yml
+- lifecycle/reso-lifecycle.yml
+- data-model/reso-data-model.yml
+- mcp/reso-mcp.yml
+- cli/reso-cli.yml
+- sandbox/reso-sandbox.yml

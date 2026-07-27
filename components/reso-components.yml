@@ -1,0 +1,71 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://tools.reso.org/
+- https://github.com/RESOStandards/reso-tools
+- https://upi.reso.org/builder/
+- https://github.com/RESOStandards/reso-upi
+note: >-
+  RESO ships prebuilt client-side surfaces rather than embeddable widgets - there is no listing card
+  or checkout element to drop into a page, because RESO has no data to render. What it publishes are
+  deployable UI applications for working with RESO servers, plus a hosted identifier builder. Listed
+  here because they are the client-side layer distinct from the server-side SDKs in packages/.
+components:
+- family: RESO Tools UI
+  name: reso-web-client
+  kind: prebuilt-web-app
+  stack: React + Vite
+  source: https://github.com/RESOStandards/reso-tools/tree/main/reso-web-client
+  docs: https://tools.reso.org/packages/reso-web-client
+  description: >-
+    Browser UI with certification analytics, a server explorer and performance reports. Deployed as
+    static assets; 138 tests.
+  deploy:
+  - 'npm run build then serve dist/'
+  - 'docker compose --profile proxy up -d (UI + proxy on http://localhost:8888)'
+  registry: not published to npm
+- family: RESO Tools UI
+  name: reso-web-api-proxy
+  kind: support-service
+  source: https://github.com/RESOStandards/reso-tools/tree/main/reso-web-api-proxy
+  docs: https://tools.reso.org/packages/reso-web-api-proxy
+  description: >-
+    Lightweight CORS proxy and static file server for web client deployments - the piece that makes a
+    browser-side RESO client possible against a third-party MLS server.
+  start: 'npm start -- --port 8888 --ui ../reso-web-client/dist'
+- family: RESO Tools UI
+  name: reso-desktop-client
+  kind: desktop-app
+  stack: Electron
+  source: https://github.com/RESOStandards/reso-tools/tree/main/reso-desktop-client
+  docs: https://tools.reso.org/packages/reso-desktop-client
+  description: >-
+    Desktop shell with end-to-end certification testing (DD, Core, Add/Edit, EntityEvent), OS-keychain
+    credential storage via safeStorage, a saved-connection manager and a bundled reference server.
+  distribution: GitHub Releases build
+- family: Universal Parcel Identifier
+  name: RESO UPI Builder
+  kind: hosted-tool
+  url: https://upi.reso.org/builder/
+  source: https://github.com/RESOStandards/reso-upi
+  description: >-
+    Public, no-login web tool that composes and validates a URN-based Universal Parcel Identifier
+    (UPI 2.0). The only end-user tool RESO hosts that anyone can use without credentials.
+  spec: https://www.reso.org/universal-parcel-identifier/
+- family: Universal Parcel Identifier
+  name: UPI Builder libraries
+  kind: client-library
+  description: Per-language UPI builder implementations, source-only (no registry packages).
+  implementations:
+  - {language: csharp, url: 'https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-Builder-dotNet'}
+  - {language: php, url: 'https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-Builder-php'}
+  - {language: java, url: 'https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-Builder-Java'}
+  - {language: javascript, url: 'https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-Builder-JavaScript', status: stub}
+  - {language: ruby, url: 'https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-Builder-ruby', status: stub}
+  demo: https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-DEMO-dotNet
+loader_libraries: []
+embeddable_widgets:
+  published: false
+  note: >-
+    No embeddable listing/search widgets are published. IDX display widgets are a vendor market built
+    on top of RESO-certified MLS feeds, not something RESO ships.

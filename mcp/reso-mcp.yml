@@ -1,0 +1,109 @@
+generated: '2026-07-26'
+method: searched
+status: published
+source:
+- https://github.com/RESOStandards/reso-tools/blob/main/reso-mcp-server/README.md
+- https://github.com/RESOStandards/reso-tools/blob/main/reso-mcp-server/doc/GUIDE.md
+- https://www.npmjs.com/package/@reso-standards/reso-mcp-server
+note: >-
+  RESO ships an official Model Context Protocol server for the RESO Web API, in two deployments:
+  a hosted "RESO Cloud MCP Server" that RESO itself operates at https://services.reso.org/mcp
+  (Streamable HTTP, API-key gated, beta), and a local stdio server published to npm as
+  @reso-standards/reso-mcp-server. This is the only production HTTP endpoint RESO operates.
+  It holds no listing data of its own - every tool takes a `url` argument pointing at some other
+  organization's RESO-certified OData server, so the MCP server is a broker over the standard,
+  not a data source. Tool names and signatures below are transcribed verbatim from the RESO Tools
+  repository README and User Guide; the live tools/list manifest is auth-gated (see probes).
+servers:
+- name: reso-cloud
+  kind: hosted
+  operator: RESO
+  transport: streamable-http
+  url: https://services.reso.org/mcp
+  method: POST
+  auth: Authorization Bearer <api-key>
+  access: >-
+    Beta. API keys issued by RESO on request to dev@reso.org (name, organization, intended use
+    case). Available to RESO members and conference attendees.
+  docs: https://github.com/RESOStandards/reso-tools/blob/main/reso-mcp-server/doc/GUIDE.md#6-reso-cloud-mcp-server
+  tools: [authenticate, query, metadata, create, update, delete, parse-filter]
+  tools_pending: [run-compliance, metadata-report]
+- name: reso-mcp
+  kind: local
+  transport: stdio
+  package: '@reso-standards/reso-mcp-server'
+  version: 0.8.0
+  bin: reso-mcp
+  install: npx @reso-standards/reso-mcp-server
+  runtime: node >=22
+  docker: true
+  scopes:
+  - name: all
+    tools: [authenticate, query, metadata, validate, parse-filter, run-compliance, metadata-report]
+  - name: cert
+    tools: [run-compliance, metadata-report]
+    invoke: npx @reso-standards/reso-mcp-server --scope cert
+  source: https://github.com/RESOStandards/reso-tools/tree/main/reso-mcp-server
+tools:
+- name: authenticate
+  description: Obtain a bearer token using OAuth2 Client Credentials. Returns a token for use with all other tools.
+  signature: 'authenticate({ clientId, clientSecret, tokenUrl, scope? })'
+  servers: [reso-cloud, reso-mcp]
+- name: query
+  description: >-
+    Query a RESO OData server. Supports $filter, $select, $orderby, $top, $skip, $count and $expand.
+  signature: 'query({ url, resource, authToken, filter?, select?, orderby?, top?, skip?, count?, expand? })'
+  servers: [reso-cloud, reso-mcp]
+- name: metadata
+  description: Fetch and parse OData $metadata. Returns entity types, fields, key properties and type information.
+  signature: 'metadata({ url, authToken, resource? })'
+  servers: [reso-cloud, reso-mcp]
+- name: create
+  description: Create a new record (OData POST). Add/Edit (RCP-010) write path.
+  servers: [reso-cloud]
+- name: update
+  description: Update a record (OData PATCH). Add/Edit (RCP-010) write path.
+  servers: [reso-cloud]
+- name: delete
+  description: Delete a record (OData DELETE). Add/Edit (RCP-010) write path.
+  servers: [reso-cloud]
+- name: validate
+  description: Validate a record against RESO Data Dictionary field rules.
+  signature: 'validate({ record, resource, version? })'
+  servers: [reso-mcp]
+- name: parse-filter
+  description: Parse an OData $filter expression into an AST for understanding, validating or transforming it.
+  signature: 'parse-filter({ filter })'
+  servers: [reso-cloud, reso-mcp]
+- name: run-compliance
+  description: >-
+    Run RESO certification compliance tests. Supports Add/Edit (RCP-010), EntityEvent (RCP-027) and
+    Web API Core.
+  signature: 'run-compliance({ endorsement, url, authToken, resource?, version?, mode?, resources? })'
+  servers: [reso-mcp]
+- name: metadata-report
+  description: Generate a RESO metadata compliance report. Checks entity types, fields and annotations.
+  signature: 'metadata-report({ url, authToken })'
+  servers: [reso-mcp]
+authentication:
+  cloud_server: Static bearer API key issued by RESO (Authorization header).
+  target_servers: >-
+    Every tool authenticates to the target RESO server separately - either an existing bearer token
+    passed as authToken, or clientId + clientSecret + tokenUrl for OAuth2 Client Credentials, which
+    the server exchanges automatically. This mirrors the Web API Core RCP-026 requirement.
+probes:
+  date: '2026-07-26'
+  results:
+  - url: https://services.reso.org/mcp
+    method: 'POST tools/list (anonymous)'
+    status: 401
+    body: >-
+      {"jsonrpc":"2.0","id":null,"error":{"code":-32000,"message":"Invalid or missing API key.
+      Contact dev@reso.org to request access to the RESO MCP server."}}
+    note: >-
+      Server is live and speaks MCP JSON-RPC; the tools/list manifest with real inputSchemas requires
+      an authenticated introspection. Tool names here come from the published documentation.
+  - url: https://services.reso.org/.well-known/oauth-authorization-server
+    status: 404
+  - url: https://services.reso.org/.well-known/oauth-protected-resource
+    status: 404

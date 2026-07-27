@@ -191,6 +191,41 @@ surfaces:
       Open-source reference clients and tools published by RESO on GitHub - web-api-commander
       (Java certification/testing tool), RESO-WebAPI-Client-PHP, reso-tools, and UPI Builder
       libraries for PHP, .NET, Java, JavaScript and Ruby (several JavaScript/Ruby ones are stubs).
+    updated: '2026-07-26'
+    registryDetail: >-
+      Seven first-party TypeScript packages were published to npm under the @reso-standards scope on
+      2026-07-19 - reso-client (OData 4.01 client SDK), reso-certification (SDK + reso-cert CLI),
+      reso-common, reso-validation, reso-metadata-utils, odata-expression-parser and
+      reso-reference-server. The PHP client is on Packagist as reso/reso-php (24,404 downloads).
+      RESO Commander is distributed as a GitHub Release JAR, not via Maven Central. Nothing
+      first-party was found on PyPI, NuGet, pkg.go.dev, RubyGems or crates.io. See
+      packages/reso-packages.yml.
+  mcp:
+    exists: true
+    detail: >-
+      Discovered in the 2026-07-26 enrichment round and materially changing the earlier finding that
+      RESO operates no endpoint. RESO ships an official MCP server in two deployments: a hosted
+      RESO Cloud MCP Server that RESO itself operates at https://services.reso.org/mcp (Streamable
+      HTTP, API-key gated beta, tools authenticate/query/metadata/create/update/delete/parse-filter)
+      and a local stdio server (@reso-standards/reso-mcp-server) that adds validate, run-compliance
+      and metadata-report. It is a broker over other people's certified servers, not a data source -
+      every tool call carries a target URL and that server's credentials. See mcp/reso-mcp.yml.
+  cli:
+    exists: true
+    detail: >-
+      reso-cert (TypeScript, current) runs the four compliance suites - Data Dictionary, Web API
+      Core, Add/Edit and EntityEvent - from the command line or CI, with documented exit codes. The
+      legacy RESO Commander (Java) covers Web API Core testing, OData client work and codegen
+      (including EDMX to OpenAPI 3) and is slated for deprecation in favour of the RESO SDK. See
+      cli/reso-cli.yml.
+  developerPortal2:
+    exists: true
+    url: https://tools.reso.org/
+    detail: >-
+      CORRECTION to developerPortalNote below. tools.reso.org (HTTP 200) is a real developer portal
+      for the RESO toolchain - Guides, Releases, Announcements, a Security Audit log and a page per
+      package. It issues no credentials, but it is a genuine developer surface that the earlier
+      probe set missed.
   postman:
     exists: false
     detail: No RESO-published Postman collection or workspace was found.
@@ -262,7 +297,39 @@ probes:
       status: 200
     - url: https://services.reso.org/
       status: 404
-      note: Responds application/json 404 on every path probed; no documented API, nothing harvestable
+      note: >-
+        CORRECTED 2026-07-26 (enrichment round): the bare root does 404, but this host is NOT empty.
+        It serves the RESO Cloud MCP Server at POST /mcp (HTTP 401 with a JSON-RPC error naming
+        dev@reso.org for an API key) and a certification API - /v2/certification/variations/stats
+        returns 401 Unauthorized while sibling paths 404. Both are real, gated endpoints. This is
+        the only production API surface RESO operates.
+    - url: https://services.reso.org/mcp
+      status: 401
+      method: POST tools/list (anonymous)
+      note: >-
+        RESO Cloud MCP Server, Streamable HTTP transport. Live and speaking MCP JSON-RPC; tools/list
+        requires an API key issued by RESO. Documented at
+        https://github.com/RESOStandards/reso-tools/blob/main/reso-mcp-server/doc/GUIDE.md#6-reso-cloud-mcp-server
+    - url: https://services.reso.org/v2/certification/variations/stats
+      status: 401
+      note: Authenticated certification API used by the RESO Tools desktop client; not publicly documented.
+    - url: https://tools.reso.org/
+      status: 200
+      note: >-
+        RESO Tools developer portal (Guides, Releases, Announcements, Security Audit, per-package
+        pages) - discovered in the 2026-07-26 enrichment round.
+    - url: https://tools.reso.org/security/
+      status: 200
+      note: Published, dated, severity-graded security audit log for the RESO Tools packages.
+    - url: https://tools.reso.org/releases/
+      status: 200
+      note: 38 dated release entries since 2026-03-02.
+    - url: https://transport.reso.org/versioning/
+      status: 200
+      note: Published SemVer + breaking-change policy.
+    - url: https://transport.reso.org/policy-changes/
+      status: 200
+      note: RESO Board policy changes effective December 2025, including two-year endorsement expiry.
     - url: https://www.reso.org/openapi.json
       status: 404
     - url: https://www.reso.org/swagger.json

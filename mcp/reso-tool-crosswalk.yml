@@ -1,0 +1,158 @@
+generated: '2026-07-26'
+method: derived
+source:
+- mcp/reso-mcp.yml
+- https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md
+- https://github.com/RESOStandards/transport/blob/main/proposals/web-api-add-edit.md
+- openapi/reso-dd-2.1-enum.xml
+note: >-
+  RESO publishes no OpenAPI. Its machine-readable contract is OData 4.0/4.01 CSDL (the $metadata
+  document harvested into openapi/) plus the ratified Web API Core (RCP-37) and Add/Edit (RCP-10)
+  request grammars. This crosswalk therefore binds each MCP tool to the OData request form it
+  issues rather than to an operationId, and names the Data Dictionary resources the request can
+  target. Nothing here is invented: every tool name comes from the RESO MCP server documentation,
+  and every OData request form is quoted from the ratified specification.
+surfaces:
+  openapi:
+    present: false
+    reason: RESO does not publish OpenAPI; probes of /openapi.json and /swagger.json return 404.
+  odata:
+    present: true
+    contract: OData 4.0/4.01 CSDL (EDMX) at <service-root>/$metadata
+    local_copies:
+    - openapi/reso-dd-2.1-enum.xml
+    - openapi/reso-dd-2.0-enum.xml
+    - openapi/reso-dd-1.7-enum.xml
+    note: >-
+      Service roots are operated by individual MLSs, not by RESO. api.reso.org appears in the
+      specification only as an illustrative example host and does not resolve.
+  graphql:
+    present: false
+  mcp:
+    present: true
+    url: https://services.reso.org/mcp
+    transport: streamable-http
+    gated: true
+    gate: API key issued by RESO (dev@reso.org); anonymous tools/list returns HTTP 401.
+crosswalk:
+- tool: query
+  category: read
+  odata:
+  - 'GET {service-root}/{Resource}'
+  - 'GET {service-root}/{Resource}?$select=&$filter=&$orderby=&$top=&$skip=&$count=true&$expand='
+  binding: odata
+  confidence: high
+  spec: Web API Core 2.0.0/2.1.0 sections 2.5 ($select, $filter, $orderby, $top, $skip, $count) and 2.1.0 ($expand)
+  note: >-
+    Tool arguments map one-to-one onto the OData system query options the standard requires servers
+    to support. $expand is a 2.1.0 addition.
+- tool: metadata
+  category: discovery
+  odata:
+  - 'GET {service-root}/$metadata'
+  binding: odata
+  confidence: high
+  spec: Web API Core - servers MUST expose an OData XML metadata (EDMX) document at $metadata
+- tool: create
+  category: write
+  odata:
+  - 'POST {service-root}/{Resource}'
+  binding: odata
+  confidence: high
+  spec: Web API Add/Edit (RCP-10)
+  note: 'Prefer: return=representation / return=minimal governs the response body.'
+- tool: update
+  category: write
+  odata:
+  - 'PATCH {service-root}/{Resource}(''{Key}'')'
+  binding: odata
+  confidence: high
+  spec: Web API Add/Edit (RCP-10)
+- tool: delete
+  category: write
+  odata:
+  - 'DELETE {service-root}/{Resource}(''{Key}'')'
+  binding: odata
+  confidence: high
+  spec: Web API Add/Edit (RCP-10)
+- tool: authenticate
+  category: auth
+  odata: []
+  binding: oauth2
+  confidence: high
+  spec: Web API Core dependency line - "OAuth 2 (Auth Token or Client Credentials)", RCP-026
+  note: >-
+    Exchanges clientId/clientSecret at the target server's tokenUrl. Not an OData operation; the
+    token endpoint belongs to the MLS's identity provider, not to RESO.
+- tool: run-compliance
+  category: certification
+  odata: []
+  binding: composite
+  confidence: high
+  spec: Add/Edit (RCP-010), EntityEvent (RCP-027), Web API Core certification suites
+  note: >-
+    Server-side composite - runs a whole certification scenario set (8 Add/Edit scenarios, 9-12
+    EntityEvent scenarios depending on mode) against a target server. No single OData request.
+- tool: metadata-report
+  category: certification
+  odata:
+  - 'GET {service-root}/$metadata'
+  binding: composite
+  confidence: medium
+  note: >-
+    Fetches $metadata then scores entity types, fields and annotations against the Data Dictionary.
+    Reads one OData request but its output is a certification report, not the OData response.
+- tool: validate
+  category: validation
+  odata: []
+  binding: local
+  confidence: high
+  source_artifact: openapi/reso-dd-2.1.json
+  note: Purely local - validates a record against Data Dictionary field rules; makes no HTTP request.
+- tool: parse-filter
+  category: validation
+  odata: []
+  binding: local
+  confidence: high
+  note: Parses an OData $filter expression into an AST; makes no HTTP request.
+mcp_only:
+- tool: validate
+  reason: Data Dictionary field-rule validation is a client-side library capability, not a server operation.
+- tool: parse-filter
+  reason: OData expression parsing is a client-side library capability, not a server operation.
+- tool: run-compliance
+  reason: Certification scenario runner - a composite of many OData requests plus assertions.
+- tool: metadata-report
+  reason: Certification report generator - composite over $metadata plus Data Dictionary scoring.
+rest_only:
+- capability: EntityEvent replication feed
+  odata: 'GET {service-root}/EntityEvent?$filter=EntityEventSequence gt {n}&$orderby=EntityEventSequence'
+  spec: RCP-027
+  note: Reachable through the generic `query` tool but has no dedicated tool.
+- capability: Push replication webhooks
+  spec: RCP-028
+  note: >-
+    Producer-to-consumer HTTP POST push. There is no MCP tool for it; the consumer implements the
+    receiving endpoint.
+- capability: Lookup Resource / RelatedLookup metadata
+  odata: 'GET {service-root}/Lookup'
+  spec: RCP-032
+  note: Reachable through `query` but not surfaced as its own tool.
+- capability: Service document
+  odata: 'GET {service-root}/'
+  spec: OData service document request
+resource_surface:
+  standard: RESO Data Dictionary 2.1
+  resource_count: 44
+  note: >-
+    Every `query`/`create`/`update`/`delete` call names one of these resources in its `resource`
+    argument. Full entity graph in data-model/reso-data-model.yml.
+  marquee: [Property, Member, Office, Media, OpenHouse, Contacts, EntityEvent, Lookup, OUID, Teams, Showing]
+coverage:
+  tools_documented: 10
+  tools_bound_to_odata: 6
+  tools_local_or_composite: 4
+  mcp_only: 4
+  odata_capabilities_without_a_tool: 4
+  openapi_operations_total: null
+  openapi_note: No OpenAPI is published, so REST operation coverage cannot be counted.

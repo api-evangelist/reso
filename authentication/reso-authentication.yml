@@ -1,0 +1,81 @@
+generated: '2026-07-26'
+method: searched
+docs: https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md
+source:
+- https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md
+- https://github.com/RESOStandards/reso-tools/blob/main/reso-mcp-server/doc/GUIDE.md
+- https://github.com/RESOStandards/reso-tools/blob/main/reso-certification/README.md
+note: >-
+  Two authentication stories that must be held apart. (1) The auth model RESO MANDATES for every
+  RESO-certified Web API server - OAuth2 Bearer tokens or OAuth2 Client Credentials over TLS 1.2+,
+  with credentials issued by the individual MLS, never by RESO. (2) The auth on the one endpoint
+  RESO itself operates - the RESO Cloud MCP Server at services.reso.org/mcp, which gates on a
+  static bearer API key issued by RESO on request. Derived from OpenAPI securitySchemes was not
+  possible: RESO publishes no OpenAPI, so this profile is transcribed from the ratified
+  specification text.
+summary:
+  types: [oauth2, http]
+  api_key_in: [header]
+  oauth2_flows: [clientCredentials]
+  transport_security: TLS 1.2 or above (mandatory)
+  openid_connect: >-
+    Removed. "The Open ID Connect layer was previously supported by the RESO Web API. As of
+    Web API 1.0.2, RESO only supports Bearer tokens and Client Credentials during Certification."
+  scopes_published: false
+schemes:
+- name: OAuth2 Bearer Token
+  type: http
+  scheme: bearer
+  applies_to: RESO-certified Web API servers (any MLS or data provider)
+  required: true
+  spec_text: >-
+    "Providers MUST use either OAuth2 Bearer tokens or Client Credentials for authentication
+    (RCP-026)."
+  spec: Web API Core 2.0.0/2.1.0 (RCP-37), section on Authentication; RCP-WEBAPI-026
+  issuer: The individual MLS or its software provider. RESO issues no Web API credentials.
+- name: OAuth2 Client Credentials
+  type: oauth2
+  flow: clientCredentials
+  applies_to: RESO-certified Web API servers (any MLS or data provider)
+  required: true
+  token_url: Provider-specific - each MLS publishes its own token endpoint. RESO defines no central one.
+  parameters: [client_id, client_secret]
+  spec_text: >-
+    "A type of authorization grant that uses a client_id and client_secret ... in order to provide a
+    Bearer Token upon request. This method is more resilient against man-in-the-middle attacks than
+    Bearer Tokens since there is an additional token request step involved, and tokens may be
+    expired and refreshed programmatically."
+  spec: Web API Core 2.0.0/2.1.0 (RCP-37)
+- name: RESO Cloud MCP API key
+  type: apiKey
+  in: header
+  parameter: Authorization
+  format: 'Bearer <api-key>'
+  applies_to: https://services.reso.org/mcp
+  required: true
+  issuer: RESO
+  how_to_obtain: >-
+    Email dev@reso.org with name, organization and intended use case (development, testing, demo,
+    integration). Beta programme; keys available to RESO members and conference attendees.
+  self_serve: false
+  probe: {url: 'https://services.reso.org/mcp', anonymous_status: 401, date: '2026-07-26'}
+client_support:
+  reso_client_sdk:
+    package: '@reso-standards/reso-client'
+    supports: [bearer token, oauth2 client credentials]
+  reso_cert_cli:
+    package: '@reso-standards/reso-certification'
+    resolution_order:
+    - 'CLI flags: --auth-token, or --client-id / --client-secret / --token-url'
+    - 'Config file: --config path/to/config.json (per-entry auth)'
+    - '.env file in the current directory'
+    - 'Environment variables: RESO_AUTH_TOKEN, or RESO_CLIENT_ID / RESO_CLIENT_SECRET / RESO_TOKEN_URI'
+  web_api_commander:
+    language: java
+    supports: [bearer token, oauth2 client credentials]
+error_semantics:
+  '403': Returned when the selected authentication mechanism is not successful (Web API Core section 2.6.1).
+access_reality: >-
+  Authentication is standardised; access is not. A RESO-certified endpoint proves conformance to
+  this OAuth2 contract and proves nothing about reachability - credentials are issued only after a
+  data licence is signed with the individual MLS that runs the endpoint.

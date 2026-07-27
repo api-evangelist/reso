@@ -1,0 +1,158 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://www.npmjs.com/org/reso-standards
+- https://packagist.org/packages/reso/reso-php
+- https://github.com/RESOStandards/reso-tools
+- https://github.com/RESOStandards/web-api-commander
+note: >-
+  RESO ships first-party client libraries for the standard it authors, not for an API it operates.
+  The modern line is the TypeScript monorepo RESOStandards/reso-tools, published to npm under the
+  @reso-standards scope on 2026-07-19; it supersedes the Java RESO Commander, which the Commander
+  README says "will be deprecated in the future in favor of the RESO SDK". Registries probed with no
+  first-party result: PyPI, Maven Central, NuGet, pkg.go.dev, RubyGems, crates.io.
+packages:
+- language: typescript
+  registry: npm
+  name: '@reso-standards/reso-client'
+  version: 0.2.0
+  url: https://www.npmjs.com/package/@reso-standards/reso-client
+  install: npm install @reso-standards/reso-client
+  official: true
+  role: sdk
+  description: >-
+    RESO Client SDK for TypeScript - OData 4.01 URI builder, CRUD helpers, CSDL metadata parsing and
+    OAuth2 Client Credentials.
+  published: '2026-07-19'
+- language: typescript
+  registry: npm
+  name: '@reso-standards/reso-certification'
+  version: 0.10.0
+  url: https://www.npmjs.com/package/@reso-standards/reso-certification
+  install: npm install @reso-standards/reso-certification
+  official: true
+  role: sdk+cli
+  bin: reso-cert
+  description: >-
+    RESO certification testing toolkit and CLI - Add/Edit (RCP-010), EntityEvent (RCP-027),
+    Web API Core 2.0.0/2.1.0 and Data Dictionary 2.0 endorsements.
+  published: '2026-07-19'
+- language: typescript
+  registry: npm
+  name: '@reso-standards/reso-common'
+  version: 0.2.0
+  url: https://www.npmjs.com/package/@reso-standards/reso-common
+  install: npm install @reso-standards/reso-common
+  official: true
+  role: library
+  description: Universal (browser + Node) RESO metadata model and projections - the shared ResoMetadata shape.
+  published: '2026-07-19'
+- language: typescript
+  registry: npm
+  name: '@reso-standards/reso-validation'
+  version: 0.1.0
+  url: https://www.npmjs.com/package/@reso-standards/reso-validation
+  install: npm install @reso-standards/reso-validation
+  official: true
+  role: library
+  description: RESO validation library - isomorphic field and business-rule validation for Data Dictionary records.
+  published: '2026-07-19'
+- language: typescript
+  registry: npm
+  name: '@reso-standards/reso-metadata-utils'
+  version: 0.1.0
+  url: https://www.npmjs.com/package/@reso-standards/reso-metadata-utils
+  install: npm install @reso-standards/reso-metadata-utils
+  official: true
+  role: library
+  description: RESO OData metadata processing utilities - CSDL parse, validate (CSDL/XSD) and serialize EDMX.
+  published: '2026-07-19'
+- language: typescript
+  registry: npm
+  name: '@reso-standards/odata-expression-parser'
+  version: 0.1.0
+  url: https://www.npmjs.com/package/@reso-standards/odata-expression-parser
+  install: npm install @reso-standards/odata-expression-parser
+  official: true
+  role: library
+  description: >-
+    Zero-dependency OData expression parsers - $filter and $expand tokenizer and recursive-descent
+    parsers.
+  published: '2026-07-19'
+- language: typescript
+  registry: npm
+  name: '@reso-standards/reso-reference-server'
+  version: 0.8.0
+  url: https://www.npmjs.com/package/@reso-standards/reso-reference-server
+  install: npm install @reso-standards/reso-reference-server
+  official: true
+  role: server
+  description: >-
+    RESO Reference OData Server - metadata-driven CRUD server for Data Dictionary resources
+    (PostgreSQL, MongoDB, SQLite).
+  published: '2026-07-19'
+- language: php
+  registry: packagist
+  name: reso/reso-php
+  url: https://packagist.org/packages/reso/reso-php
+  install: composer require reso/reso-php
+  official: true
+  role: sdk
+  description: RESO Web API open-source reference client written in PHP.
+  source: https://github.com/RESOStandards/RESO-WebAPI-Client-PHP
+  downloads_total: 24404
+  license: MIT
+- language: java
+  registry: github-releases
+  name: web-api-commander
+  version: v2.0.0-dd-2.0-initial-release
+  url: https://github.com/RESOStandards/web-api-commander/releases
+  install: 'Download the JAR from GitHub Releases, or build with Gradle; also runnable via Docker'
+  official: true
+  role: sdk+cli
+  description: >-
+    RESO Commander - OData client Java library, command-line client and automated Web API Core
+    certification testing tool, wrapping Apache Olingo with OAuth2 Bearer and Client Credentials
+    support.
+  status: maintained-but-superseded
+  note: >-
+    Not published to Maven Central (repo1.maven.org/maven2/org/reso/ returns 404); distributed as a
+    GitHub Release artifact. README states it "will be deprecated in the future in favor of the
+    RESO SDK".
+documented_not_yet_published:
+- language: typescript
+  registry: npm
+  name: '@reso-standards/reso-mcp-server'
+  version: 0.8.0
+  install_documented: npx @reso-standards/reso-mcp-server
+  official: true
+  role: mcp-server
+  source: https://github.com/RESOStandards/reso-tools/tree/main/reso-mcp-server
+  probe:
+    url: https://registry.npmjs.org/@reso-standards%2Freso-mcp-server
+    status: 404
+    date: '2026-07-26'
+  note: >-
+    The MCP server README documents `npx @reso-standards/reso-mcp-server`, but the package was not
+    resolvable on the npm registry on the probe date. It is installable from source in the
+    reso-tools monorepo, and the hosted RESO Cloud MCP Server needs no install at all.
+unpublished_workspace_packages:
+- name: reso-data-generator
+  note: In the reso-tools monorepo; not on npm as of the probe date.
+- name: reso-web-client
+  note: React + Vite browser UI; shipped via the repo and Docker, not npm.
+- name: reso-desktop-client
+  note: Electron desktop shell; shipped as a GitHub Release build.
+- name: reso-web-api-proxy
+  note: CORS proxy / static file server; shipped via the repo and Docker.
+upi_builder_libraries:
+  note: >-
+    Universal Parcel Identifier builder libraries published as GitHub source only - no registry
+    packages found. Several are explicitly stubs.
+  repos:
+  - {language: csharp, url: 'https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-Builder-dotNet'}
+  - {language: php, url: 'https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-Builder-php'}
+  - {language: java, url: 'https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-Builder-Java'}
+  - {language: javascript, url: 'https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-Builder-JavaScript', status: stub}
+  - {language: ruby, url: 'https://github.com/RESOStandards/RESO-UniversalPropertyIdentifier-Builder-ruby', status: stub}
+registries_probed_no_result: [pypi, maven-central, nuget, pkg.go.dev, rubygems, crates.io]

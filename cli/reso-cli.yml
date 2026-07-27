@@ -1,0 +1,115 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://github.com/RESOStandards/reso-tools/blob/main/reso-certification/README.md
+- https://tools.reso.org/packages/reso-certification
+- https://github.com/RESOStandards/web-api-commander
+note: >-
+  RESO ships two first-party command-line tools, and they are certification tools rather than
+  data-access tools - which is exactly what an industry body's CLI should be. reso-cert (TypeScript,
+  current) runs the same compliance suites RESO uses in production against any RESO OData server;
+  the RESO Commander (Java, legacy) does Web API Core testing and OData client work and is slated
+  for deprecation in favour of the RESO SDK.
+clis:
+- name: reso-cert
+  status: current
+  language: typescript
+  package: '@reso-standards/reso-certification'
+  version: 0.10.0
+  install:
+  - npm install @reso-standards/reso-certification
+  - npm install -g @reso-standards/reso-certification
+  docs: https://tools.reso.org/packages/reso-certification
+  source: https://github.com/RESOStandards/reso-tools/tree/main/reso-certification
+  purpose: >-
+    Run RESO certification compliance tests from the command line or in CI. The CLI, the Desktop
+    Client and the MCP server all call the same SDK functions.
+  commands:
+  - command: reso-cert core
+    description: >-
+      Web API Core 2.0.0 / 2.1.0 compliance. Validates OData query capabilities - $filter across all
+      data types, $select, $orderby, $top, $skip, $count, enumerations and error codes. 2.1.0 adds
+      $expand, server-driven paging and string-based enum comparisons.
+    example: reso-cert core --url https://api.example.com --auth-token TOKEN
+  - command: reso-cert dd
+    description: >-
+      Data Dictionary 2.0 compliance. Fetches metadata, merges Lookup Resource data, checks for
+      variations and replicates data using multiple strategies.
+    example: reso-cert dd --url https://api.example.com --auth-token TOKEN --strict
+  - command: reso-cert add-edit
+    description: >-
+      Add/Edit (RCP-010) compliance. Validates create, update and delete with representation/minimal
+      preferences and error handling. 8 certification scenarios.
+    example: reso-cert add-edit --url https://api.example.com --auth-token TOKEN
+  - command: reso-cert entity-event
+    description: >-
+      EntityEvent (RCP-027) compliance. Validates change tracking in observe mode (read-only) or full
+      mode (canary writes). 9-12 scenarios depending on mode.
+    example: reso-cert entity-event --url https://api.example.com --auth-token TOKEN --mode observe
+  - command: reso-cert metadata-report adapt
+    description: >-
+      Synthesize the top-level resources[] block on a DD 2.0 or 2.1 metadata report so tools expecting
+      a DD 2.2-shaped report can load it. Idempotent.
+    example: reso-cert metadata-report adapt --in report.json --out adapted.json --pretty
+  flags:
+  - {flag: --url, description: Target RESO OData service root}
+  - {flag: --auth-token, description: Bearer token for the target server}
+  - {flag: '--client-id / --client-secret / --token-url', description: OAuth2 Client Credentials instead of a bearer token}
+  - {flag: --config, description: 'JSON config file; each entry in configs[] is tested sequentially'}
+  - {flag: --mode, description: 'observe (read-only) or full (canary writes), EntityEvent only'}
+  - {flag: --strict, description: Strict mode, Data Dictionary only}
+  - {flag: --verbose, description: Line-by-line output, good for CI logs}
+  - {flag: --output, description: 'json for machine-readable output'}
+  - {flag: --output-dir, description: Write reports to a directory}
+  auth_resolution_order:
+  - CLI flags (--auth-token, or --client-id/--client-secret/--token-url)
+  - Config file (--config path/to/config.json, per-entry auth)
+  - .env file in the current directory
+  - Environment variables (RESO_AUTH_TOKEN, or RESO_CLIENT_ID / RESO_CLIENT_SECRET / RESO_TOKEN_URI)
+  exit_codes:
+  - {code: 0, meaning: All scenarios passed}
+  - {code: 1, meaning: One or more scenarios failed}
+  - {code: 2, meaning: Runtime error}
+  docker: >-
+    Compliance suites can be run against the reference server with
+    `docker compose --profile compliance-core|compliance-dd|compliance-addedit|compliance-entity-event up`.
+- name: reso-mcp
+  status: current
+  language: typescript
+  package: '@reso-standards/reso-mcp-server'
+  bin: reso-mcp
+  install_documented: npx @reso-standards/reso-mcp-server
+  purpose: Start the local RESO MCP server over stdio for an MCP-capable AI client.
+  flags:
+  - {flag: '--scope all|cert', description: 'Limit which tools are exposed (cert = run-compliance + metadata-report)'}
+  detail: mcp/reso-mcp.yml
+  note: Documented on tools.reso.org but not resolvable on npm as of 2026-07-26; installable from source.
+- name: RESO Commander
+  status: legacy
+  language: java
+  repo: https://github.com/RESOStandards/web-api-commander
+  install:
+  - Download the JAR from GitHub Releases
+  - Build with Gradle
+  - Run in Docker
+  purpose: >-
+    OData client Java library and command-line client, plus automated Web API Core certification
+    testing. Wraps the Apache Olingo Java OData client with OAuth2 Bearer Token and Client
+    Credentials support.
+  capability_docs:
+  - {name: Certification, url: 'https://github.com/RESOStandards/web-api-commander/blob/main/doc/Certification.md'}
+  - {name: CLI, url: 'https://github.com/RESOStandards/web-api-commander/blob/main/doc/CLI.md'}
+  - {name: OData client library, url: 'https://github.com/RESOStandards/web-api-commander/blob/main/doc/ODataClient.md'}
+  - {name: Docker, url: 'https://github.com/RESOStandards/web-api-commander/blob/main/doc/Docker.md'}
+  - {name: Codegen, url: 'https://github.com/RESOStandards/web-api-commander/blob/main/doc/Codegen.md'}
+  capabilities:
+  - Validate XML metadata
+  - Make OData requests and generate sample requests for testing
+  - 'Codegen: reference XML metadata, DDL, database seeds, automated acceptance tests, reference server models'
+  - Convert XML Metadata to OpenAPI 3 format
+  deprecation: >-
+    "The RESO Commander is only used for Web API Core testing and will be deprecated in the future in
+    favor of the RESO SDK."
+  note: >-
+    The Codegen path can emit OpenAPI 3 from a server's EDMX. RESO publishes no OpenAPI itself - any
+    OpenAPI for a RESO server is generated by the consumer from that server's $metadata.

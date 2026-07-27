@@ -1,0 +1,36 @@
+generated: '2026-07-26'
+method: searched
+result: none
+note: >-
+  No /.well-known/ discovery surface was found on any RESO host. www.reso.org is WordPress and its
+  security plugin answers every /.well-known/ path with an off-domain 302 that terminates in a 403,
+  so the 403s below are the plugin, not a document. services.reso.org (the RESO Cloud MCP Server)
+  answers application/json 404 for every well-known path probed, including the two RFC 9728 /
+  RFC 8414 documents an MCP server would normally advertise - it gates on a static API key instead
+  of OAuth. No document returned 200, so nothing was saved and no WellKnown pointer is wired.
+hosts:
+- host: https://www.reso.org
+  documents:
+  - {path: /.well-known/security.txt, status: 403, note: WordPress security-plugin off-domain redirect}
+  - {path: /.well-known/openid-configuration, status: 403, note: same redirect behaviour}
+  - {path: /.well-known/oauth-authorization-server, status: 403}
+  - {path: /.well-known/api-catalog, status: 403}
+  - {path: /.well-known/ai-plugin.json, status: 403}
+- host: https://services.reso.org
+  note: RESO Cloud MCP Server host - the only production endpoint RESO operates.
+  documents:
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+- host: https://transport.reso.org
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+- host: https://certification.reso.org
+  documents:
+  - {path: /.well-known/security.txt, status: 400}
+- host: https://dd.reso.org
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+probe_date: '2026-07-26'

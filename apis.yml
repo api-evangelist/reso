@@ -111,7 +111,64 @@ apis:
   - type: Certification
     url: https://www.reso.org/certificates/
     name: Public directory of RESO-certified organizations
+  - type: Conventions
+    url: conventions/reso-conventions.yml
+    name: RESO Web API cross-cutting conventions (OData query options, pagination, versioning, errors)
+  - type: ErrorCatalog
+    url: errors/reso-problem-types.yml
+    name: OData JSON error envelope and Web API Core response-code table
+  - type: Authentication
+    url: authentication/reso-authentication.yml
+    name: RESO Web API authentication profile (OAuth2 Bearer / Client Credentials, RCP-026)
+  - type: DataModel
+    url: data-model/reso-data-model.yml
+    name: Derived Data Dictionary 2.1 entity-relationship graph (44 entities, 146 relationships)
+  - type: Webhooks
+    url: asyncapi/reso-webhooks.yml
+    name: EntityEvent (RCP-27) and Push Replication with Webhooks (RCP-28) event surface
+- aid: reso:reso-cloud-mcp
+  name: RESO Cloud MCP Server
+  description: >-
+    The RESO Cloud MCP Server is the one production API endpoint RESO itself operates. It speaks the
+    Model Context Protocol over Streamable HTTP at https://services.reso.org/mcp and exposes the
+    RESO toolchain to AI agents - authenticate, query, metadata, create, update, delete and
+    parse-filter - so an agent can work against any RESO-certified OData server without knowing
+    OData syntax. It is a broker, not a data source: every tool call takes a target server URL and
+    that server's credentials, and RESO stores no listing data behind it. Access is beta and gated
+    on an API key issued by RESO on request to dev@reso.org, available to RESO members and
+    conference attendees; an anonymous tools/list returns HTTP 401 with a JSON-RPC error pointing at
+    that address. The same tool interfaces are available offline via the local stdio server
+    (@reso-standards/reso-mcp-server), which adds the validate, run-compliance and metadata-report
+    certification tools.
+  humanURL: https://tools.reso.org/packages/reso-mcp-server
+  baseURL: https://services.reso.org/mcp
+  tags:
+  - MCP
+  - AI Agents
+  - OData
+  - Certification
+  - Tooling
+  properties:
+  - type: MCPServer
+    url: mcp/reso-mcp.yml
+    name: RESO MCP server manifest (hosted cloud server + local stdio server)
+  - type: ToolCrosswalk
+    url: mcp/reso-tool-crosswalk.yml
+    name: MCP tool to OData request-form crosswalk
+  - type: Documentation
+    url: https://github.com/RESOStandards/reso-tools/blob/main/reso-mcp-server/doc/GUIDE.md
+    name: RESO MCP Server User Guide
+  - type: Documentation
+    url: https://github.com/RESOStandards/reso-tools/blob/main/reso-mcp-server/README.md
+    name: RESO MCP Server README
+  - type: Authentication
+    url: authentication/reso-authentication.yml
+    name: API-key bearer auth on the cloud server; OAuth2 pass-through to target servers
+  - type: SourceCode
+    url: https://github.com/RESOStandards/reso-tools/tree/main/reso-mcp-server
 common:
+- type: DomainSecurity
+  url: security/reso-domain-security.yml
 - type: Website
   url: https://www.reso.org/
 - type: About
@@ -163,6 +220,92 @@ common:
 - type: Email
   url: mailto:dev@reso.org
   name: RESO developer and certification contact
+- type: DeveloperPortal
+  url: https://tools.reso.org/
+  name: RESO Tools - developer portal for the open-source RESO toolchain
+- type: APIReference
+  url: https://dd.reso.org/
+  name: RESO Data Dictionary Wiki - per-resource, per-field reference
+- type: GettingStarted
+  url: https://www.reso.org/developer-resources/
+  name: RESO developer resources
+- type: Support
+  url: https://www.reso.org/support/
+- type: HelpCenter
+  url: https://www.reso.org/developer-faqs/
+  name: RESO developer FAQs
+- type: SignUp
+  url: https://www.reso.org/join/
+  name: Join RESO (membership is the gate on certification, not on reading the standards)
+- type: Roadmap
+  url: https://transport.reso.org/
+  name: RESO Transport specifications - 7 ratified standards and 14 in-progress change proposals
+- type: ChangeLog
+  url: https://tools.reso.org/releases/
+  name: RESO Tools release notes
+- type: ChangeLog
+  url: changelog/reso-changelog.yml
+  name: Structured changelog - tooling releases, specification ratifications and policy milestones
+- type: Lifecycle
+  url: lifecycle/reso-lifecycle.yml
+  name: Versioning policy, ratification process, deprecation notices and endorsement expiry
+- type: Deprecation
+  url: https://transport.reso.org/versioning/
+  name: RESO versioning and breaking-change policy (the deprecation model for the standards)
+- type: Conventions
+  url: conventions/reso-conventions.yml
+  name: RESO Web API cross-cutting conventions
+- type: ErrorCatalog
+  url: errors/reso-problem-types.yml
+  name: OData JSON error envelope and Web API Core response-code table
+- type: Authentication
+  url: authentication/reso-authentication.yml
+  name: RESO authentication profile
+- type: Conformance
+  url: conformance/reso-conformance.yml
+  name: Cross-cutting standards the RESO Web API profile conforms to
+- type: Packages
+  url: packages/reso-packages.yml
+  name: First-party RESO client libraries and tools across npm, Packagist and GitHub Releases
+- type: SDKs
+  url: packages/reso-packages.yml
+  name: Official RESO SDKs - TypeScript (@reso-standards/*), PHP (reso/reso-php), Java (RESO Commander)
+- type: CLI
+  url: cli/reso-cli.yml
+  name: reso-cert certification CLI, reso-mcp and the legacy RESO Commander
+- type: Sandbox
+  url: sandbox/reso-sandbox.yml
+  name: Self-hosted RESO reference server, seeded synthetic data and compliance profiles
+- type: Components
+  url: components/reso-components.yml
+  name: Prebuilt client-side surfaces - web client, desktop client, proxy and the UPI Builder
+- type: DataModel
+  url: data-model/reso-data-model.yml
+  name: Derived Data Dictionary 2.1 entity-relationship graph
+- type: Webhooks
+  url: asyncapi/reso-webhooks.yml
+  name: EntityEvent and Push Replication webhook event surface
+- type: AgentSkill
+  url: skills/_index.yml
+  name: RESO agent skills index
+- type: AgentSkill
+  url: skills/reso-query-a-certified-server.md
+  name: Query a RESO-certified Web API server
+- type: AgentSkill
+  url: skills/reso-replicate-with-entityevent.md
+  name: Replicate a RESO feed with EntityEvent and webhooks
+- type: AgentSkill
+  url: skills/reso-certify-a-server.md
+  name: Certify a server against RESO standards
+- type: LLMsTxt
+  url: llms/reso-llms.txt
+  name: Generated llms.txt for RESO (RESO publishes none)
+- type: SecurityAudit
+  url: security/reso-security-audit.yml
+  name: RESO Tools published security audit log (findings, severities and accepted risks)
+- type: SecurityAudit
+  url: https://tools.reso.org/security/
+  name: RESO Security Audit Log
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

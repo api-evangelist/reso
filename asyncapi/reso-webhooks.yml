@@ -1,0 +1,87 @@
+generated: '2026-07-26'
+method: searched
+spec_type: Webhooks
+asyncapi_published: false
+source:
+- https://github.com/RESOStandards/transport/blob/main/proposals/webhooks-push.md
+- https://github.com/RESOStandards/transport/blob/main/proposals/entity-events.md
+- https://transport.reso.org/proposals/webhooks-push
+- https://transport.reso.org/proposals/entity-events
+note: >-
+  RESO publishes no AsyncAPI document (transport.reso.org/asyncapi.yaml returns 404) but it does
+  ratify the real-estate sector's event contract, in two layers: EntityEvent (RCP-27), an append-only
+  change log served as an ordinary OData resource, and Push Replication with Webhooks (RCP-28), which
+  pushes those same events to a consumer endpoint over HTTP POST. The direction is inverted from the
+  usual webhook artifact: the CONSUMER implements the receiving endpoint, and the MLS is the producer.
+  RESO itself sends no webhooks - it specifies them.
+standards:
+- id: RCP-27
+  name: EntityEvent Resource and Replication
+  version: 2.0.2
+  ratified: '2023-12'
+  url: https://transport.reso.org/proposals/entity-events
+  model: pull
+  description: >-
+    Change tracking and incremental replication using the EntityEvent resource - the interface of an
+    append-only log. Consumers poll it and pick up the corresponding records from the provider API.
+- id: RCP-28
+  name: Push Replication Using Webhooks and the RESO EntityEvent Resource
+  version: 1.0.1
+  ratified: '2023-12'
+  url: https://transport.reso.org/proposals/webhooks-push
+  model: push
+  description: >-
+    Adds the ability to push events from the EntityEvent Resource using webhooks, so consumers do not
+    have to poll continuously.
+event_surface:
+  trigger: >-
+    When an (EntityEventSequenceNumeric, ResourceName, ResourceRecordKey) tuple has been published to
+    the EntityEvent resource, providers MAY push that event to data consumers.
+  transport: HTTP POST from producer to the consumer's endpoint
+  payload_format: RESO Common Format (RCP-25), single-valued or multi-valued
+  authentication: OAuth2 bearer tokens
+  context_annotation: '"@reso.context": "urn:reso:metadata:2.0:resource:entityevent"'
+  payload_fields:
+  - {name: EntityEventSequence, description: Monotonic sequence number identifying the event}
+  - {name: ResourceName, description: The Data Dictionary resource the event refers to}
+  - {name: ResourceRecordKey, description: The key of the changed record}
+  headers:
+  - name: EntityEventSource
+    direction: producer -> consumer
+    required: false
+    type: String(255)
+    description: >-
+      Optional consumer-assigned label identifying which feed a pushed batch belongs to (e.g.
+      "IDX Feed 123"). The only RESO-defined correlation header.
+  - name: Retry-After
+    direction: consumer -> producer
+    required: false
+    description: >-
+      Date or duration in seconds. The producer waits that long before resuming transfer. After some
+      number of retries the producer MAY stop the flow; the consumer may then have to POST to the
+      producer's endpoint to resume the feed.
+requirements:
+- Consumers MUST implement an API endpoint that can receive EntityEvents.
+- Producers MUST use an HTTP POST request to the consumer's API with an EntityEvent payload and the given credentials.
+- Providers SHOULD also host an EntityEvent Resource so consumers may replay events as needed.
+polite_behavior:
+  guidance: >-
+    Consumers SHOULD accept and queue events rather than blocking and trying to process them as they
+    arrive - especially while initializing a new replication feed, when there may be a large backlog.
+  backpressure: Retry-After
+compatibility: Data Dictionary 2.0+ and the JSON Web API.
+pull_alternative:
+  odata: 'GET <service-root>/EntityEvent?$filter=EntityEventSequence gt {n}&$orderby=EntityEventSequence'
+  note: >-
+    The EntityEvent resource is an ordinary Data Dictionary resource (see data-model/), so it is
+    queryable with the same OData options as Property or Member, and reachable through the RESO MCP
+    `query` tool.
+in_progress:
+- {rcp: RCP-49, name: EntityEvent Subscriptions and Filtering, version: 1.0.0, status: in review}
+certification:
+  endorsement: EntityEvent (RCP-027)
+  scenarios: 9-12 depending on mode
+  modes: [observe (read-only), full (canary writes)]
+  tool: reso-cert entity-event
+probes:
+- {url: 'https://transport.reso.org/asyncapi.yaml', status: 404, date: '2026-07-26'}

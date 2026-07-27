@@ -1,0 +1,129 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md
+- https://transport.reso.org/
+- https://www.reso.org/certification/
+note: >-
+  RESO is the certifying body, so this artifact reads in two directions. "conforms" below records
+  which cross-cutting industry standards the RESO Web API profile itself is built on and requires of
+  certified servers. RESO does not appear in its own certification directory - it certifies other
+  organizations' systems and operates none of its own.
+standards:
+- id: odata-4.0
+  name: OASIS OData 4.0
+  conforms: true
+  evidence: >-
+    Web API Core dependency line - "OData 4.0 or 4.01". Servers MUST conform to OData conventions for
+    metadata, query and response formats.
+- id: odata-4.01
+  name: OASIS OData 4.01
+  conforms: true
+  evidence: Web API Core 2.1.0 adds $expand, server-driven paging and string enum comparison per OData 4.01.
+- id: odata-csdl-edmx
+  name: OData Common Schema Definition Language (XML/EDMX)
+  conforms: true
+  evidence: >-
+    Servers MUST expose an OData XML metadata document at <service-root>/$metadata. Reference EDMX
+    for DD 1.7 / 2.0 / 2.1 is harvested in openapi/.
+- id: odata-json-format
+  name: OData JSON Format 4.0
+  conforms: true
+  evidence: >-
+    Servers MUST return JSON for data requests, and MUST follow OData error handling guidelines
+    (Web API Core section 2.6.2).
+- id: oauth2
+  name: OAuth 2.0
+  conforms: true
+  evidence: >-
+    "Providers MUST use either OAuth2 Bearer tokens or Client Credentials for authentication
+    (RCP-026)."
+- id: oauth2-client-credentials
+  name: OAuth 2.0 Client Credentials grant (RFC 6749 section 4.4)
+  conforms: true
+  evidence: Named as one of the two permitted authentication methods for certification.
+- id: oauth2-bearer
+  name: OAuth 2.0 Bearer Token Usage (RFC 6750)
+  conforms: true
+  evidence: Named as one of the two permitted authentication methods for certification.
+- id: oidc
+  name: OpenID Connect
+  conforms: false
+  evidence: >-
+    Removed. "As of Web API 1.0.2, RESO only supports Bearer tokens and Client Credentials during
+    Certification."
+- id: tls-1.2
+  name: TLS 1.2 or above
+  conforms: true
+  evidence: >-
+    "Since the RESO Web API requires that HTTPS and the OAuth2 protocols are used, all server
+    implementations MUST implement Transport Layer Security (TLS)"; dependency line reads TLS 1.2+.
+    RFC 5246, RFC 7525 and the OWASP TLS guide are cited normatively.
+- id: iso-8601
+  name: ISO 8601 dates
+  conforms: true
+  evidence: Edm.Date MUST be in YYYY-MM-DD format according to ISO 8601.
+- id: semver
+  name: Semantic Versioning
+  conforms: true
+  evidence: https://transport.reso.org/versioning/ - "RESO uses Semantic Versioning (SemVer) in its specifications".
+- id: rfc9457-problem-details
+  name: RFC 9457 Problem Details for HTTP APIs
+  conforms: false
+  evidence: >-
+    RESO uses the OData JSON error envelope (root "error" object), not application/problem+json. See
+    errors/reso-problem-types.yml.
+- id: rfc8594-sunset-header
+  name: RFC 8594 Sunset HTTP Header
+  conforms: false
+  evidence: Deprecation is expressed through specification versions and certification tests, not HTTP headers.
+- id: json-api
+  name: JSON:API
+  conforms: false
+- id: graphql
+  name: GraphQL
+  conforms: false
+- id: openapi
+  name: OpenAPI
+  conforms: false
+  evidence: >-
+    RESO publishes no OpenAPI. The RESO Commander can generate OpenAPI 3 from a server's EDMX, but
+    that is a consumer-side conversion.
+- id: fhir
+  name: HL7 FHIR
+  conforms: false
+  applicable: false
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  evidence: >-
+    RESO ships an official MCP server (local stdio and the hosted RESO Cloud MCP Server at
+    services.reso.org/mcp), built on @modelcontextprotocol/sdk. See mcp/reso-mcp.yml.
+- id: rfc8414-oauth-metadata
+  name: RFC 8414 OAuth 2.0 Authorization Server Metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns 404 on services.reso.org.
+- id: rfc9116-security-txt
+  name: RFC 9116 security.txt
+  conforms: false
+  evidence: No /.well-known/security.txt served on any RESO host. See well-known/reso-well-known.yml.
+certification_programme:
+  role: RESO is the certifying authority, not a certified party.
+  url: https://www.reso.org/certification/
+  directory: https://www.reso.org/certificates/
+  analytics_portal: https://certification.reso.org/
+  endorsements_certified:
+  - RESO Data Dictionary 2.0
+  - RESO Web API Core 2.0.0
+  - RESO Common Format
+  expiry: RESO endorsements expire after two years (RESO Board policy effective December 2025).
+  cost: Complimentary for RESO members; non-members per https://www.reso.org/certification-fee-schedule/
+  mandate: >-
+    NAR Policy Statement 7.90 requires MLSs owned and operated by associations of REALTORS to
+    implement the Data Dictionary and Web API and adopt new releases within one year of ratification.
+organizational_compliance:
+  published_certifications: []
+  note: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP or GDPR posture is published by RESO for its own
+    operations, and no trust centre was found. RESO's compliance story is about other people's
+    servers conforming to its standards, not about RESO as a processor - it stores no listing data.

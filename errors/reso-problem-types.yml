@@ -1,0 +1,103 @@
+generated: '2026-07-26'
+method: searched
+format: odata-json-error
+source: https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md
+docs: https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md
+note: >-
+  RESO does not use RFC 9457 application/problem+json. Web API Core section 2.6.2 requires that
+  "a compliant server MUST follow the OData error handling guidelines" - the OData JSON Error
+  Response envelope. The status-code table below is transcribed verbatim from Web API Core section
+  2.6.1; it is the error contract every RESO-certified MLS server implements, not errors RESO
+  itself returns.
+envelope:
+  media_type: application/json
+  root: error
+  fields:
+  - {name: code, type: string, description: Machine-readable error code}
+  - {name: message, type: string, description: Human-readable error message}
+  - {name: target, type: string, description: The part of the request that caused the error (e.g. "query")}
+  - {name: details, type: array, description: 'Per-item errors, each with code, target and message'}
+  - {name: innererror, type: object, description: 'Implementation detail; may carry trace and context'}
+  spec: http://docs.oasis-open.org/odata/odata-json-format/v4.0/errata03/os/odata-json-format-v4.0-errata03-os-complete.html#_Toc453766668
+  example: |
+    {
+      "error": {
+        "code": "501",
+        "message": "Unsupported functionality",
+        "target": "query",
+        "details": [
+          { "code": "501", "target": "$skip", "message": "Resource does not support the $skip parameter" }
+        ],
+        "innererror": { "trace": [], "context": {} }
+      }
+    }
+problems:
+- status: 200
+  title: OK
+  description: >-
+    Returned by GET method when retrieving a record or records. If no records are found an empty
+    result set is returned.
+- status: 202
+  title: Accepted
+  description: >-
+    Returned by GET method to indicate that the server received the request but that it may take
+    time to fulfill a response.
+- status: 400
+  title: Bad Request
+  description: >-
+    Returned by GET method calls when the data fails validation and more detail on the error may be
+    found in the body of the response.
+  remediation: Parse details[] to identify the offending query option or field, correct it and retry.
+- status: 400
+  title: Unsupported metadata version
+  description: >-
+    Server MUST return HTTP 400 Bad Request when the client requests an older unsupported version or
+    a newer version of the standard than the server implements.
+  spec_section: Versioning
+- status: 403
+  title: Forbidden
+  description: Returned when the selected Authentication mechanism is not successful.
+  remediation: Re-issue the OAuth2 Bearer token, or re-run the Client Credentials exchange.
+- status: 404
+  title: Not Found
+  description: Returned when a GET cannot find a resource or collection.
+  remediation: Treat as a no-op; do not retry. Confirm the resource name against $metadata.
+- status: 413
+  title: Request Entity Too Large
+  description: >-
+    Returned at the discretion of the server. Used to indicate when the server cannot handle the
+    complexity of the specific request - explicitly cited for oversized or overly complex $filter
+    and $orderby expressions.
+  remediation: Simplify the $filter/$orderby expression or split the query.
+- status: 415
+  title: Unsupported Media
+  description: Returned when a media format requested is not supported by the system.
+- status: 429
+  title: Too Many Requests
+  description: >-
+    Returned at the discretion of the server. Used to indicate that the user / licensee has met or
+    exceeded their allowed usage (transactions per second, per day, per month, etc.).
+  remediation: >-
+    Back off. Limits are set per data licence by the individual MLS; RESO publishes no rate-limit
+    numbers.
+- status: 500
+  title: Internal Server Error
+  description: Returned when an unexpected error is encountered and more detail may be provided in the response body.
+- status: 501
+  title: Not Implemented
+  description: Returned when the requested method is not available.
+agent_guidance:
+  source: https://github.com/RESOStandards/reso-tools/blob/main/reso-mcp-server/doc/GUIDE.md
+  note: >-
+    The RESO MCP User Guide documents three write-path patterns agents must handle, transcribed here
+    because they are the operative error semantics for the Add/Edit surface.
+  patterns:
+  - signal: '400 with details[]'
+    meaning: Structured validation failure - the server said exactly what is wrong.
+    action: Parse details, summarize to the user, propose a fix, retry with consent.
+  - signal: '404 with empty details[]'
+    meaning: The target record is not there.
+    action: Acknowledge, treat as a no-op, do not retry.
+  - signal: '200 with a bad value visible'
+    meaning: The server accepted something it probably should not have.
+    action: Do not trust silence - sanity-check constrained fields after every write.

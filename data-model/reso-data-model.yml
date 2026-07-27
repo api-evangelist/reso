@@ -1,0 +1,830 @@
+generated: '2026-07-26'
+method: derived
+source:
+- openapi/reso-dd-2.1-enum.xml
+- openapi/reso-dd-2.1.json
+note: Derived entity-relationship graph for RESO Data Dictionary 2.1. Entities and keys come from the OData EntityType
+  definitions in the reference EDMX; relationships come verbatim from the 146 NavigationProperty elements in the
+  same document (Collection(...) -> has_many, single type -> has_one). Field and lookup counts come from the Data
+  Dictionary 2.1 JSON reference. This is the schema every RESO-certified MLS server implements; RESO itself operates
+  no server holding these records.
+model:
+  standard: RESO Data Dictionary
+  version: '2.1'
+  namespace: org.reso.metadata
+  format: OData 4.0/4.01 CSDL (EDMX)
+  entity_count: 44
+  relationship_count: 146
+  field_count: 2167
+  lookup_value_count: 4140
+  key_convention: Each resource declares a single string key named <Resource>Key; a human-readable <Resource>KeyNumeric
+    or Id may also be present.
+  reference: https://dd.reso.org/
+hub_entities:
+- name: OUID
+  inbound_relationships: 44
+- name: HistoryTransactional
+  inbound_relationships: 28
+- name: Member
+  inbound_relationships: 20
+- name: Media
+  inbound_relationships: 10
+- name: SocialMedia
+  inbound_relationships: 9
+- name: Office
+  inbound_relationships: 9
+- name: Property
+  inbound_relationships: 8
+- name: Contacts
+  inbound_relationships: 3
+entities:
+- name: Association
+  key:
+  - AssociationKey
+  field_count: 46
+  lookup_field_count: 10
+  metadata_property_count: 41
+  wiki: https://dd.reso.org/DD2.1/Association/
+  relationships:
+  - kind: has_one
+    target: Member
+    via: AssociationMember
+  - kind: has_many
+    target: SocialMedia
+    via: AssociationSocialMedia
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: Building
+  key:
+  - BuildingKey
+  field_count: 262
+  lookup_field_count: 92
+  metadata_property_count: 259
+  wiki: https://dd.reso.org/DD2.1/Building/
+  relationships:
+  - kind: has_many
+    target: PropertyGreenVerification
+    via: GreenBuildingVerifications
+  - kind: has_many
+    target: Media
+    via: Media
+  - kind: has_many
+    target: PropertyPowerProduction
+    via: PowerProduction
+- name: Caravan
+  key:
+  - CaravanKey
+  field_count: 34
+  lookup_field_count: 6
+  metadata_property_count: 34
+  wiki: https://dd.reso.org/DD2.1/Caravan/
+  relationships: []
+- name: CaravanStop
+  key:
+  - CaravanStopKey
+  field_count: 26
+  lookup_field_count: 4
+  metadata_property_count: 26
+  wiki: https://dd.reso.org/DD2.1/CaravanStop/
+  relationships: []
+- name: ContactListingNotes
+  key:
+  - ContactKey
+  field_count: 11
+  lookup_field_count: 2
+  metadata_property_count: 8
+  wiki: https://dd.reso.org/DD2.1/ContactListingNotes/
+  relationships:
+  - kind: has_one
+    target: Contacts
+    via: Contact
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Property
+    via: Listing
+- name: ContactListings
+  key:
+  - ContactListingsKey
+  field_count: 23
+  lookup_field_count: 4
+  metadata_property_count: 19
+  wiki: https://dd.reso.org/DD2.1/ContactListings/
+  relationships:
+  - kind: has_one
+    target: Contacts
+    via: Contact
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Property
+    via: Listing
+  - kind: has_many
+    target: ContactListingNotes
+    via: ListingNotes
+- name: Contacts
+  key:
+  - ContactKey
+  field_count: 92
+  lookup_field_count: 17
+  metadata_property_count: 85
+  wiki: https://dd.reso.org/DD2.1/Contacts/
+  relationships:
+  - kind: has_many
+    target: OtherPhone
+    via: ContactsOtherPhones
+  - kind: has_many
+    target: SocialMedia
+    via: ContactsSocialMedia
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_many
+    target: Media
+    via: Media
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: Member
+    via: OwnerMember
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: EntityEvent
+  key:
+  - EntityEventSequence
+  field_count: 5
+  lookup_field_count: 1
+  metadata_property_count: 5
+  wiki: https://dd.reso.org/DD2.1/EntityEvent/
+  relationships: []
+- name: Field
+  key:
+  - FieldKey
+  field_count: 19
+  lookup_field_count: 2
+  metadata_property_count: 19
+  wiki: https://dd.reso.org/DD2.1/Field/
+  relationships: []
+- name: HistoryTransactional
+  key:
+  - HistoryTransactionalKey
+  field_count: 24
+  lookup_field_count: 3
+  metadata_property_count: 21
+  wiki: https://dd.reso.org/DD2.1/HistoryTransactional/
+  relationships:
+  - kind: has_one
+    target: Member
+    via: ChangedByMember
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: InternetTracking
+  key:
+  - EventKey
+  field_count: 60
+  lookup_field_count: 9
+  metadata_property_count: 54
+  wiki: https://dd.reso.org/DD2.1/InternetTracking/
+  relationships:
+  - kind: has_one
+    target: OUID
+    via: ActorOriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: ActorSourceSystem
+  - kind: has_one
+    target: OUID
+    via: EventOriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: EventSourceSystem
+  - kind: has_one
+    target: OUID
+    via: ObjectOriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: ObjectSourceSystem
+- name: InternetTrackingSummary
+  key:
+  - ListingId
+  field_count: 28
+  lookup_field_count: 3
+  metadata_property_count: 28
+  wiki: https://dd.reso.org/DD2.1/InternetTrackingSummary/
+  relationships: []
+- name: LockOrBox
+  key:
+  - LockOrBoxKey
+  field_count: 45
+  lookup_field_count: 6
+  metadata_property_count: 40
+  wiki: https://dd.reso.org/DD2.1/LockOrBox/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: Member
+    via: ShowingAgent
+  - kind: has_one
+    target: Office
+    via: ShowingOffice
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: Lookup
+  key:
+  - LookupKey
+  field_count: 7
+  lookup_field_count: 1
+  metadata_property_count: 7
+  wiki: https://dd.reso.org/DD2.1/Lookup/
+  relationships: []
+- name: Media
+  key:
+  - MediaKey
+  field_count: 43
+  lookup_field_count: 10
+  metadata_property_count: 39
+  wiki: https://dd.reso.org/DD2.1/Media/
+  relationships:
+  - kind: has_one
+    target: Member
+    via: ChangedByMember
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: Member
+  key:
+  - MemberKey
+  field_count: 88
+  lookup_field_count: 18
+  metadata_property_count: 81
+  wiki: https://dd.reso.org/DD2.1/Member/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_many
+    target: Media
+    via: Media
+  - kind: has_many
+    target: OtherPhone
+    via: MemberOtherPhones
+  - kind: has_many
+    target: SocialMedia
+    via: MemberSocialMedia
+  - kind: has_one
+    target: Office
+    via: Office
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: MemberAssociation
+  key:
+  - AssociationKey
+  field_count: 32
+  lookup_field_count: 3
+  metadata_property_count: 27
+  wiki: https://dd.reso.org/DD2.1/MemberAssociation/
+  relationships:
+  - kind: has_one
+    target: Association
+    via: Association
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Member
+    via: Member
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: MemberStateLicense
+  key:
+  - MemberStateLicenseKey
+  field_count: 11
+  lookup_field_count: 3
+  metadata_property_count: 9
+  wiki: https://dd.reso.org/DD2.1/MemberStateLicense/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Member
+    via: Member
+- name: Model
+  key:
+  - ModelKey
+  field_count: 12
+  lookup_field_count: 1
+  metadata_property_count: 12
+  wiki: https://dd.reso.org/DD2.1/Model/
+  relationships: []
+- name: OUID
+  key:
+  - OrganizationUniqueIdKey
+  field_count: 47
+  lookup_field_count: 8
+  metadata_property_count: 43
+  wiki: https://dd.reso.org/DD2.1/OUID/
+  relationships:
+  - kind: has_one
+    target: Member
+    via: ChangedByMember
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_many
+    target: Media
+    via: Media
+  - kind: has_many
+    target: SocialMedia
+    via: OrganizationSocialMedia
+- name: Office
+  key:
+  - OfficeKey
+  field_count: 74
+  lookup_field_count: 16
+  metadata_property_count: 66
+  wiki: https://dd.reso.org/DD2.1/Office/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Office
+    via: MainOffice
+  - kind: has_many
+    target: Media
+    via: Media
+  - kind: has_one
+    target: Member
+    via: OfficeBroker
+  - kind: has_one
+    target: Member
+    via: OfficeManager
+  - kind: has_many
+    target: SocialMedia
+    via: OfficeSocialMedia
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: OfficeAssociation
+  key:
+  - AssociationKey
+  field_count: 24
+  lookup_field_count: 3
+  metadata_property_count: 19
+  wiki: https://dd.reso.org/DD2.1/OfficeAssociation/
+  relationships:
+  - kind: has_one
+    target: Association
+    via: Association
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Office
+    via: Office
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: OfficeCorporateLicense
+  key:
+  - OfficeCorporateLicenseKey
+  field_count: 11
+  lookup_field_count: 3
+  metadata_property_count: 9
+  wiki: https://dd.reso.org/DD2.1/OfficeCorporateLicense/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Office
+    via: Office
+- name: OpenHouse
+  key:
+  - OpenHouseKey
+  field_count: 34
+  lookup_field_count: 4
+  metadata_property_count: 27
+  wiki: https://dd.reso.org/DD2.1/OpenHouse/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Property
+    via: Listing
+  - kind: has_many
+    target: Media
+    via: Media
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: Member
+    via: ShowingAgent
+  - kind: has_many
+    target: SocialMedia
+    via: SocialMedia
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: OtherPhone
+  key:
+  - OtherPhoneKey
+  field_count: 11
+  lookup_field_count: 4
+  metadata_property_count: 10
+  wiki: https://dd.reso.org/DD2.1/OtherPhone/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+- name: Property
+  key:
+  - ListingKey
+  field_count: 742
+  lookup_field_count: 200
+  metadata_property_count: 722
+  wiki: https://dd.reso.org/DD2.1/Property/
+  relationships:
+  - kind: has_one
+    target: Member
+    via: BuyerAgent
+  - kind: has_one
+    target: Office
+    via: BuyerOffice
+  - kind: has_one
+    target: Teams
+    via: BuyerTeam
+  - kind: has_one
+    target: Member
+    via: CoBuyerAgent
+  - kind: has_one
+    target: Office
+    via: CoBuyerOffice
+  - kind: has_one
+    target: Member
+    via: CoListAgent
+  - kind: has_one
+    target: Office
+    via: CoListOffice
+  - kind: has_many
+    target: PropertyGreenVerification
+    via: GreenBuildingVerifications
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Member
+    via: ListAgent
+  - kind: has_one
+    target: Office
+    via: ListOffice
+  - kind: has_one
+    target: Teams
+    via: ListTeam
+  - kind: has_many
+    target: Media
+    via: Media
+  - kind: has_many
+    target: OpenHouse
+    via: OpenHouses
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_many
+    target: PropertyPowerProduction
+    via: PowerProduction
+  - kind: has_many
+    target: PropertyRooms
+    via: Rooms
+  - kind: has_many
+    target: SocialMedia
+    via: SocialMedia
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+  - kind: has_many
+    target: PropertyUnitTypes
+    via: UnitTypes
+- name: PropertyGreenVerification
+  key:
+  - GreenBuildingVerificationKey
+  field_count: 16
+  lookup_field_count: 4
+  metadata_property_count: 14
+  wiki: https://dd.reso.org/DD2.1/PropertyGreenVerification/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Property
+    via: Listing
+- name: PropertyPowerProduction
+  key:
+  - PowerProductionKey
+  field_count: 13
+  lookup_field_count: 4
+  metadata_property_count: 11
+  wiki: https://dd.reso.org/DD2.1/PropertyPowerProduction/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Property
+    via: Listing
+- name: PropertyPowerStorage
+  key:
+  - PowerStorageKey
+  field_count: 7
+  lookup_field_count: 2
+  metadata_property_count: 7
+  wiki: https://dd.reso.org/DD2.1/PropertyPowerStorage/
+  relationships: []
+- name: PropertyRooms
+  key:
+  - RoomKey
+  field_count: 20
+  lookup_field_count: 9
+  metadata_property_count: 18
+  wiki: https://dd.reso.org/DD2.1/PropertyRooms/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Property
+    via: Listing
+- name: PropertyUnitTypes
+  key:
+  - UnitTypeKey
+  field_count: 18
+  lookup_field_count: 3
+  metadata_property_count: 16
+  wiki: https://dd.reso.org/DD2.1/PropertyUnitTypes/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Property
+    via: Listing
+- name: Prospecting
+  key:
+  - ProspectingKey
+  field_count: 32
+  lookup_field_count: 5
+  metadata_property_count: 27
+  wiki: https://dd.reso.org/DD2.1/Prospecting/
+  relationships:
+  - kind: has_one
+    target: Contacts
+    via: Contact
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_many
+    target: Media
+    via: Media
+  - kind: has_one
+    target: Member
+    via: OwnerMember
+  - kind: has_one
+    target: SavedSearch
+    via: SavedSearch
+- name: Queue
+  key:
+  - QueueTransactionKey
+  field_count: 17
+  lookup_field_count: 4
+  metadata_property_count: 14
+  wiki: https://dd.reso.org/DD2.1/Queue/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: RelatedLookup
+  key:
+  - RelatedLookupKey
+  field_count: 3
+  lookup_field_count: 0
+  metadata_property_count: 3
+  wiki: https://dd.reso.org/DD2.1/RelatedLookup/
+  relationships: []
+- name: Rules
+  key:
+  - RuleKey
+  field_count: 29
+  lookup_field_count: 5
+  metadata_property_count: 26
+  wiki: https://dd.reso.org/DD2.1/Rules/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: SavedSearch
+  key:
+  - SavedSearchKey
+  field_count: 28
+  lookup_field_count: 6
+  metadata_property_count: 24
+  wiki: https://dd.reso.org/DD2.1/SavedSearch/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Member
+    via: Member
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: Showing
+  key:
+  - ShowingKey
+  field_count: 45
+  lookup_field_count: 3
+  metadata_property_count: 34
+  wiki: https://dd.reso.org/DD2.1/Showing/
+  relationships:
+  - kind: has_one
+    target: OUID
+    via: AgentOriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: AgentSourceSystem
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Property
+    via: Listing
+  - kind: has_one
+    target: OUID
+    via: ListingOriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: ListingSourceSystem
+  - kind: has_many
+    target: Media
+    via: Media
+  - kind: has_one
+    target: Member
+    via: ShowingAgent
+  - kind: has_one
+    target: OUID
+    via: ShowingOriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: ShowingSourceSystem
+  - kind: has_many
+    target: SocialMedia
+    via: SocialMedia
+- name: ShowingAppointment
+  key:
+  - ShowingAppointmentKey
+  field_count: 13
+  lookup_field_count: 3
+  metadata_property_count: 13
+  wiki: https://dd.reso.org/DD2.1/ShowingAppointment/
+  relationships: []
+- name: ShowingAvailability
+  key:
+  - ShowingAvailabilityKey
+  field_count: 13
+  lookup_field_count: 2
+  metadata_property_count: 13
+  wiki: https://dd.reso.org/DD2.1/ShowingAvailability/
+  relationships: []
+- name: ShowingRequest
+  key:
+  - ShowingRequestKey
+  field_count: 18
+  lookup_field_count: 4
+  metadata_property_count: 18
+  wiki: https://dd.reso.org/DD2.1/ShowingRequest/
+  relationships: []
+- name: SocialMedia
+  key:
+  - SocialMediaKey
+  field_count: 11
+  lookup_field_count: 4
+  metadata_property_count: 10
+  wiki: https://dd.reso.org/DD2.1/SocialMedia/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+- name: TeamMembers
+  key:
+  - TeamMemberKey
+  field_count: 22
+  lookup_field_count: 3
+  metadata_property_count: 18
+  wiki: https://dd.reso.org/DD2.1/TeamMembers/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_one
+    target: Member
+    via: Member
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+- name: Teams
+  key:
+  - TeamKey
+  field_count: 46
+  lookup_field_count: 7
+  metadata_property_count: 40
+  wiki: https://dd.reso.org/DD2.1/Teams/
+  relationships:
+  - kind: has_many
+    target: HistoryTransactional
+    via: HistoryTransactional
+  - kind: has_many
+    target: Media
+    via: Media
+  - kind: has_one
+    target: OUID
+    via: OriginatingSystem
+  - kind: has_one
+    target: OUID
+    via: SourceSystem
+  - kind: has_one
+    target: Member
+    via: TeamLead
+  - kind: has_many
+    target: SocialMedia
+    via: TeamsSocialMedia
+- name: TransactionManagement
+  key:
+  - TransactionKey
+  field_count: 5
+  lookup_field_count: 2
+  metadata_property_count: 5
+  wiki: https://dd.reso.org/DD2.1/TransactionManagement/
+  relationships: []

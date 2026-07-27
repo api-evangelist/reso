@@ -1,0 +1,134 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://transport.reso.org/versioning/
+- https://transport.reso.org/policy-changes/
+- https://transport.reso.org/reso-rcp-process
+- https://transport.reso.org/
+- https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md
+- https://www.nar.realtor/handbook-on-multiple-listing-policy/operational-issues-section-12-real-estate-transaction-standards-rets-policy-statement-790
+note: >-
+  RESO's lifecycle is a STANDARDS lifecycle, not a service lifecycle. There is no uptime SLA and no
+  status page because RESO runs no production data service; what it publishes instead is an
+  explicit, dated versioning policy, a ratification process, a deprecation model and an expiring
+  certification. That policy is unusually well documented for this catalog.
+versioning:
+  scheme: semver
+  docs: https://transport.reso.org/versioning/
+  rules:
+  - MAJOR when making incompatible API changes
+  - MINOR when adding functionality in a backward compatible manner
+  - PATCH when making backward compatible bug fixes
+  practice: >-
+    Data Dictionary uses major and minor only in public form (1.7, 2.0, 2.1); patch-level changes are
+    tracked internally. Transport specifications include the patch level (Web API Core 2.0.0) but
+    only major and minor are used in practice.
+  negotiation:
+  - {condition: Older version not supported, response: HTTP 400 Bad Request}
+  - {condition: Newer version than the server supports, response: HTTP 400 Bad Request}
+current_versions:
+- {standard: Web API Core, rcp: RCP-37, version: 2.1.0, ratified: '2023-12', url: 'https://transport.reso.org/proposals/web-api-core'}
+- {standard: Data Dictionary, rcp: RCP-36/40, version: '2.0', ratified: '2023-11', url: 'https://transport.reso.org/proposals/data-dictionary'}
+- {standard: Web API Add/Edit, rcp: RCP-10, version: 2.0.0, ratified: '2023-12', url: 'https://transport.reso.org/proposals/web-api-add-edit'}
+- {standard: EntityEvent Resource and Replication, rcp: RCP-27, version: 2.0.2, ratified: '2023-12', url: 'https://transport.reso.org/proposals/entity-events'}
+- {standard: Push Replication with Webhooks, rcp: RCP-28, version: 1.0.1, ratified: '2023-12', url: 'https://transport.reso.org/proposals/webhooks-push'}
+- {standard: Validation Expressions, rcp: RCP-19, version: 1.0.0, ratified: '2023-12', url: 'https://transport.reso.org/proposals/validation-expressions'}
+- {standard: RESO Common Format, rcp: RCP-25, version: '1.7', ratified: '2023-11', url: 'https://transport.reso.org/proposals/reso-common-format'}
+counts: {ratified_standards: 7, in_progress_proposals: 14}
+in_progress:
+- {rcp: RCP-22, name: Autofill Service, version: 1.0.0}
+- {rcp: RCP-35, name: Supporting Single Feeds, version: 1.0.0}
+- {rcp: RCP-42, name: Model and Field Resources, version: 1.0.0}
+- {rcp: RCP-43, name: Local Fields and Predictability, version: 1.0.0}
+- {rcp: RCP-44, name: Metadata Internationalization and Locale, version: 1.0.0}
+- {rcp: RCP-45, name: Legacy and Deprecated Data Elements, version: 1.0.0}
+- {rcp: RCP-47, name: RelatedLookup Resource, version: 1.0.0}
+- {rcp: RCP-48, name: Add/Edit with Media, version: 1.0.0}
+- {rcp: RCP-49, name: EntityEvent Subscriptions and Filtering, version: 1.0.0}
+- {rcp: RCP-50, name: Data Provenance, version: 1.0.0}
+- {rcp: RCP-51, name: DOM Increment, version: 1.0.0}
+- {rcp: RCP-52, name: Listing Advertisement, version: 1.0.0}
+- {rcp: RCP-53, name: Media Checksums, dated: '2025-05'}
+- {rcp: RCP-54, name: ULI Resolution Protocol, version: 0.1.0}
+ratification_process:
+  docs: https://transport.reso.org/reso-rcp-process
+  stages:
+  - {step: 1, name: Proposal, detail: Submitted via GitHub Discussions with a business case and requirements.}
+  - {step: 2, name: Draft & Review, detail: 'Transport Workgroup reviews the draft specification and testing rules. At least two vendor implementations are required.'}
+  - {step: 3, name: Approval, detail: Approved by the Transport Workgroup and Certification once implementations are verified; testing tools are built.}
+  - {step: 4, name: Ratification, detail: 'Major versions require ratification by the RESO Board of Directors. Minor versions may be approved by the Transport Workgroup without Board ratification.'}
+deprecation:
+  policy_url: https://transport.reso.org/versioning/
+  policy_changes_url: https://transport.reso.org/policy-changes/
+  sunset_header: false
+  model: >-
+    Deprecation is expressed through the specification and the certification test suite, not through
+    HTTP headers. Removing something from a RESO specification means RESO stops testing for it in
+    certification; providers may keep serving it unless expressly forbidden (for example a
+    disallowed synonym), so deprecation from the standard is not removal from the API.
+  breaking_change_definition:
+  - A standard field has a type change.
+  - A disallowed synonym is added for a resource, field or lookup.
+  - An existing enumerated field is closed, or items are removed from an existing closed enumeration.
+  - Duplicate or replacement data elements are added.
+  - New testing rules are added to existing data elements, including Fast Track mappings.
+  breaking_changes_require: Ratification of a MAJOR version by the RESO Board of Directors.
+  active_deprecation_notices:
+  - target: OData Edm.EnumType lookups
+    status: deprecating
+    replacement: Edm.String lookups via the Lookup Resource (RCP-032)
+    reason: >-
+      Edm.EnumType usually requires knowledge of vendor-specific namespaces and does not allow
+      human-friendly lookup names.
+    source: https://transport.reso.org/proposals/web-api-core
+  - target: Edm.EnumType with IsFlags=true (multi-value lookups)
+    status: deprecating
+    replacement: Collection(Edm.String) with the Lookup Resource
+    reason: Strictly following OData limits IsFlags to 64 total values.
+    source: https://transport.reso.org/proposals/web-api-core
+  - target: RESO Commander (web-api-commander, Java)
+    status: to-be-deprecated
+    replacement: The RESO SDK (@reso-standards/* TypeScript packages)
+    source: https://github.com/RESOStandards/web-api-commander
+  - target: OpenID Connect support in the Web API
+    status: removed
+    removed_in: Web API 1.0.2
+    replacement: OAuth2 Bearer tokens and Client Credentials only
+    source: https://transport.reso.org/proposals/web-api-core
+  - target: RETS (Real Estate Transaction Standard)
+    status: legacy
+    replacement: RESO Web API
+    note: RESO still hosts RETS support pages for legacy implementers.
+certification_lifecycle:
+  effective: '2025-12'
+  approved_by: RESO Board of Directors
+  source: https://transport.reso.org/policy-changes/
+  rules:
+  - RESO endorsements will expire after two years.
+  - RESO will always certify on the latest minor version in a given major branch.
+  - New testing rules on existing data elements are a MAJOR change; on new data elements, MINOR.
+  - Fast Track suggestions will only be required in the next major version; providers get warnings first.
+  - The RESO SDK version will be added to endorsements.
+  - Data Dictionary and Transport Workgroups may approve MINOR Data Dictionary versions without Board ratification, and no breaking changes may be introduced in a minor version.
+adoption_mandate:
+  body: National Association of REALTORS (NAR)
+  instrument: Handbook on Multiple Listing Policy, Policy Statement 7.90
+  url: https://www.nar.realtor/handbook-on-multiple-listing-policy/operational-issues-section-12-real-estate-transaction-standards-rets-policy-statement-790
+  rule: >-
+    MLS organizations owned and operated by associations of REALTORS "will keep current by
+    implementing new releases of RESO Standards within one (1) year from ratification."
+  effect: >-
+    A ratification date is therefore also a compliance clock for several hundred MLSs - the tightest
+    adoption cadence of any standard in this catalog.
+sla:
+  published: false
+  note: RESO operates no production data service, so it publishes no uptime target.
+status_page:
+  published: false
+  probes:
+  - {url: 'https://status.reso.org', status: 000, note: DNS does not resolve}
+  - {url: 'https://www.reso.org/status/', status: 404}
+  - {url: 'https://reso.statuspage.io', status: 200, note: 'redirects to atlassian.com marketing - not a RESO status page'}
+tooling_lifecycle:
+  detail: changelog/reso-changelog.yml
+deprecated_operations: []

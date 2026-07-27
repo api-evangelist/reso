@@ -1,0 +1,49 @@
+generated: '2026-07-26'
+method: searched
+source: https://tools.reso.org/security/
+url: https://tools.reso.org/security/
+note: >-
+  RESO publishes a dated, severity-graded Security Audit Log for its open-source tooling, with each
+  finding linked to a GitHub issue that is closed when resolved. This is a genuine public security
+  surface and it is recorded here - but it is an audit log, not a vulnerability-disclosure policy.
+  There is no security.txt, no SECURITY.md in the RESOStandards org, no bug-bounty programme, no
+  security@ address and no instructions for reporting a vulnerability, so no VulnerabilityDisclosure
+  or Security pointer is claimed for RESO.
+scope: RESO Tools open-source packages (reference server, certification CLI, desktop client, MCP server)
+format: Findings prepended newest-first; each finding carries a severity and a linked GitHub issue.
+severities_used: [Critical, High, Medium, Low, Info]
+audits:
+- version: v0.5
+  date: '2026-04-06'
+  findings:
+  - {title: Docker base image vulnerability, severity: High, status: Open, issue: 'https://github.com/RESOStandards/reso-tools/issues/98', detail: 'node:22-alpine carries 1 high, 4 medium and 1 low vulnerability; used in reso-certification and reso-reference-server Dockerfiles. Remediation: pin to a patched version and add image scanning to CI.'}
+  - {title: Legacy cert-utils local copy, severity: Noted, status: Accepted, detail: 'legacy-cert-utils/ contains a full copy of reso-certification-utils@3.0.0 with its own transitive dependencies, increasing attack surface; temporary until the DD pipeline rewrite.'}
+  accepted_risks:
+  - {title: MCP server auth, detail: 'The MCP server accepts bearer tokens and Client Credentials via tool parameters, passed through stdio rather than the network. "In hosted deployments, the server should be behind an auth proxy."'}
+  - {title: schema-validation-settings.json copied to cwd, detail: Committee-approved read-only file copied to a user-writable location at runtime.}
+  - {title: '@odata.nextLink rebase', detail: 'The replication iterator rewrites nextLink hostnames to match the client''s initial request URL; only host/port change, but a compromised initialRequestUri could redirect.'}
+  - {title: DD XLSX processing, detail: 'The xlsx library parses untrusted XLSX files; the generator reads cell values only, not macros.'}
+- version: v0.4
+  date: '2026-04-05'
+  findings:
+  - {title: navigateTo script injection, severity: Critical, status: Fixed, detail: 'Electron main-process navigateTo() interpolated unescaped path parameters into JavaScript strings; paths are now JSON-serialized.'}
+  - {title: Release URL validation, severity: Critical, status: Fixed, detail: 'The update checker now validates the GitHub API html_url against https://github.com/RESOStandards/reso-tools/releases/ before shell.openExternal(), preventing SSRF/URL injection.'}
+  accepted_risks:
+  - {title: 'reso-certification-utils@3.0.0 supply chain', detail: 'Installed from GitHub rather than npm; git tags are not cryptographically signed. Accepted because both repos are under RESOStandards org control; migration to npm publishing planned.'}
+  - {title: IPC storage API, detail: 'storage:get / storage:set handlers accept arbitrary keys.'}
+later_findings_examples:
+- {title: LIKE wildcard escaping, detail: '% and _ in user search values were not escaped before embedding in LIKE patterns; an escapeLikeWildcards helper now escapes %, _ and \\ with ESCAPE ''\\''.', file: filter-to-sqlite.ts}
+- {title: Decorative ETags (not content-based), severity: Info, detail: 'ETags generated from new Date().toISOString() base64-encoded; not content-based and not used for concurrency control.', file: 'reso-reference-server/server/src/odata/annotations.ts'}
+disclosure:
+  policy_published: false
+  security_txt: false
+  security_md: false
+  bug_bounty: false
+  contact_published: >-
+    No security-specific contact. The general developer contact is dev@reso.org; findings are tracked
+    as public issues in https://github.com/RESOStandards/reso-tools/issues.
+  probes:
+  - {url: 'https://www.reso.org/.well-known/security.txt', status: 403, note: WordPress security-plugin off-domain redirect}
+  - {url: 'https://raw.githubusercontent.com/RESOStandards/reso-tools/main/SECURITY.md', status: 404}
+  - {url: 'https://raw.githubusercontent.com/RESOStandards/.github/main/SECURITY.md', status: 404}
+  - {url: 'https://raw.githubusercontent.com/RESOStandards/transport/main/SECURITY.md', status: 404}

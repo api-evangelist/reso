@@ -1,0 +1,116 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://github.com/RESOStandards/transport/blob/main/proposals/web-api-core.md
+- https://github.com/RESOStandards/transport/blob/main/proposals/web-api-add-edit.md
+- https://github.com/RESOStandards/transport/blob/main/proposals/entity-events.md
+- https://github.com/RESOStandards/transport/blob/main/proposals/webhooks-push.md
+docs: https://transport.reso.org/
+note: >-
+  Cross-cutting request/response semantics of the RESO Web API, transcribed from the ratified
+  Web API Core (RCP-37) and its companion endorsements. These are the conventions every
+  RESO-certified MLS server implements; RESO operates no such server itself. Because the RESO Web
+  API is a profile of OData 4.0/4.01, most conventions are OData's, constrained by RESO.
+protocol:
+  base: OData 4.0 / 4.01 (OASIS)
+  profile: RESO Web API Core 2.0.0 (ratified Jan 2021), 2.1.0 (ratified Dec 2023)
+  response_format: JSON (servers MUST return JSON for data requests)
+  metadata_format: OData XML metadata (EDMX/CSDL) at <service-root>/$metadata
+  service_document: 'GET <service-root>/ returns the OData service document'
+  case_sensitivity: >-
+    Field names are case sensitive in $select, $filter and $orderby; clients MUST respect the case
+    defined in the resource metadata.
+  date_format: ISO 8601 - Edm.Date MUST be YYYY-MM-DD
+authentication:
+  style: OAuth2 Bearer token or OAuth2 Client Credentials (RCP-026); OpenID Connect no longer supported
+  transport: TLS 1.2 or above, mandatory
+  detail: authentication/reso-authentication.yml
+idempotency:
+  supported: false
+  note: >-
+    RESO publishes no idempotency-key contract. Web API Add/Edit (RCP-10) defines create/update/
+    delete over OData POST/PATCH/DELETE with no idempotency header, and no idempotency requirement
+    appears in Web API Core. Retry safety on the write path is left to the implementer.
+pagination:
+  style: client-driven ($top/$skip) with server-driven paging added in 2.1.0
+  params:
+  - {name: $top, required_of_servers: true, description: Number of records to return}
+  - {name: $skip, required_of_servers: true, description: 'Number of records to skip; combine with $top to page'}
+  - {name: $count, description: 'Set $count=true to return @odata.count alongside the page'}
+  response_fields:
+  - {name: '@odata.context', description: Echoes the request URL / context of the payload}
+  - {name: '@odata.count', description: Total matching record count when $count=true}
+  - {name: value, description: The array of records}
+  notes:
+  - Servers decide how many records they allow skipping over.
+  - >-
+    A compliant client SHOULD use $orderby to sustain consistency between pages; a compliant server
+    is not required to guarantee consistent results between requests.
+  - >-
+    For large or incremental transfers, RESO steers consumers away from $skip paging and toward
+    timestamp windows on ModificationTimestamp or the EntityEvent sequence (RCP-027).
+  - Server-driven paging is added in Web API Core 2.1.0.
+field_selection:
+  sparse_fields: {param: $select, description: 'Comma-separated list of fields to return'}
+  expansion:
+    param: $expand
+    added_in: Web API Core 2.1.0
+    basis: OData NavigationProperty definitions in the RESO reference metadata (146 in DD 2.1)
+    detail: data-model/reso-data-model.yml
+  filtering:
+    param: $filter
+    description: >-
+      OData logical and comparison operators across the RESO primitive types, including string
+      matching, ranges, date windows and enumeration comparison. Web API Core 2.1.0 adds
+      string-based enum comparison via the Lookup Resource.
+    tooling: '@reso-standards/odata-expression-parser, and the parse-filter MCP tool'
+  sorting: {param: $orderby, description: 'Field plus asc/desc; server may restrict allowed values'}
+enumerations:
+  legacy: Edm.EnumType (and Edm.EnumType with IsFlags=true for multi-value)
+  current: Edm.String / Collection(Edm.String) with the Lookup Resource (RCP-032)
+  guidance: >-
+    "RESO is currently migrating to Edm.String lookups, and new implementations should use this
+    approach." IsFlags=true is deprecated - strictly read, OData limits it to 64 values.
+write_path:
+  spec: Web API Add/Edit (RCP-10)
+  create: 'POST <service-root>/{Resource}'
+  update: 'PATCH <service-root>/{Resource}(''{Key}'')'
+  delete: 'DELETE <service-root>/{Resource}(''{Key}'')'
+  return_preference: 'Prefer: return=representation | return=minimal'
+  certification_scenarios: 8
+versioning:
+  scheme: endorsement version negotiated against the server's declared standard version
+  behaviour:
+  - {condition: Older version not supported, response: HTTP 400 Bad Request}
+  - {condition: Newer version than the server implements, response: HTTP 400 Bad Request}
+  detail: lifecycle/reso-lifecycle.yml
+error_envelope:
+  format: OData JSON error object (NOT RFC 9457 problem+json)
+  root: error
+  detail: errors/reso-problem-types.yml
+rate_limit_signaling:
+  status: 429 Too Many Requests
+  header_contract: >-
+    None standardised. Web API Core says 429 is returned "at the discretion of the server" when the
+    licensee has met or exceeded allowed usage (per second, per day, per month). The actual limits
+    live in the data licence with each MLS.
+  push_backpressure:
+    spec: RCP-028
+    header: 'Retry-After (date or seconds) returned by the consumer to the producer'
+    behaviour: >-
+      Producers wait the indicated interval before resuming; after some number of retries a producer
+      MAY stop the flow, and the consumer may have to POST to resume the feed.
+request_tracing:
+  request_id_header: none standardised
+  note: >-
+    RCP-028 defines an optional EntityEventSource header (String 255) that lets a producer label
+    which feed a pushed batch belongs to. That is the only RESO-defined correlation header found.
+events:
+  entity_event: {spec: RCP-027, detail: 'asyncapi/reso-webhooks.yml'}
+  push_webhooks: {spec: RCP-028, detail: 'asyncapi/reso-webhooks.yml'}
+related_artifacts:
+- errors/reso-problem-types.yml
+- authentication/reso-authentication.yml
+- lifecycle/reso-lifecycle.yml
+- data-model/reso-data-model.yml
+- asyncapi/reso-webhooks.yml

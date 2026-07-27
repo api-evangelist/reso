@@ -1,0 +1,106 @@
+generated: '2026-07-26'
+method: searched
+source:
+- https://github.com/RESOStandards/reso-tools
+- https://tools.reso.org/
+- https://tools.reso.org/packages/reso-reference-server
+- https://github.com/RESOStandards/reso-tools/blob/main/reso-mcp-server/doc/GUIDE.md
+- https://www.reso.org/web-api-developer-reference-server/
+- https://github.com/RESOStandards/reso-web-api-reference-server
+note: >-
+  RESO's sandbox is self-hosted, not hosted. There is no RESO-operated test endpoint with test
+  credentials, because RESO holds no listing data. Instead RESO ships a metadata-driven reference
+  OData server plus a seeded, referentially-correct synthetic data generator, so a developer can
+  stand up a fully conformant RESO Web API locally in one docker compose command and point the SDK,
+  the CLI, the desktop client or the MCP server at it. Every value below is published in RESO's own
+  repositories and docs; nothing here is invented.
+test_vs_live:
+  separation: environment, not key prefix
+  detail: >-
+    RESO does not issue test versus live keys. Live access is a data licence with an individual MLS;
+    test access is a locally-run reference server you control. There is no shared test tenancy.
+sandboxes:
+- name: RESO Reference Server (current)
+  package: '@reso-standards/reso-reference-server'
+  version: 0.8.0
+  source: https://github.com/RESOStandards/reso-tools/tree/main/reso-reference-server
+  docs: https://tools.reso.org/packages/reso-reference-server
+  kind: self-hosted
+  description: >-
+    Metadata-driven OData reference server for RESO Data Dictionary resources. Backends PostgreSQL,
+    MongoDB or SQLite. 254 tests.
+  start:
+  - 'cd reso-reference-server && docker compose up -d'
+  - 'docker compose --profile seed up seed'
+  endpoints:
+  - {name: server, url: 'http://localhost:8080'}
+  - {name: web UI, url: 'http://localhost:5173'}
+  - {name: metadata, url: 'http://localhost:8080/$metadata'}
+  compliance_profiles:
+  - {profile: compliance-dd, tests: Data Dictionary 2.0}
+  - {profile: compliance-core, tests: Web API Core 2.0.0}
+  - {profile: compliance-addedit, tests: Add/Edit RCP-010}
+  - {profile: compliance-entity-event, tests: EntityEvent RCP-027}
+  published_test_values:
+  - name: authToken
+    value: admin-token
+    where: >-
+      Used in the RESO MCP server README's local test invocation against the seeded reference server
+      (tools/call query with authToken "admin-token" on http://localhost:8080).
+    scope: local reference server only
+    note: >-
+      A local development token in RESO's own documentation, not a credential for any real system.
+      It grants nothing outside a container you started yourself.
+- name: RESO Web API Reference Server (legacy)
+  source: https://github.com/RESOStandards/reso-web-api-reference-server
+  docs: https://www.reso.org/web-api-developer-reference-server/
+  kind: self-hosted
+  language: java
+  description: RESO Web API and Data Dictionary compliant server, Docker-built.
+  endpoints:
+  - {name: metadata, url: 'http://localhost:8080/core/2.0.0/$metadata'}
+  status: superseded by the TypeScript reference server
+- name: RESO Desktop Client
+  source: https://github.com/RESOStandards/reso-tools/tree/main/reso-desktop-client
+  kind: self-hosted-app
+  description: >-
+    Electron desktop shell with end-to-end certification testing (DD, Core, Add/Edit, EntityEvent),
+    secure credential storage and a bundled reference server. Runs on SQLite with no Docker required.
+  start: 'cd reso-desktop-client && npm install && npm run dev'
+- name: RESO Web Client + proxy
+  source: https://github.com/RESOStandards/reso-tools/tree/main/reso-web-client
+  kind: self-hosted-app
+  description: >-
+    React + Vite browser UI with cert analytics, server explorer and performance reports; the
+    reso-web-api-proxy adds a CORS proxy and static file server.
+  start: 'npm start -- --port 8888 --ui ../reso-web-client/dist'
+  endpoints:
+  - {name: UI + proxy, url: 'http://localhost:8888'}
+test_data:
+  generator: reso-data-generator
+  source: https://github.com/RESOStandards/reso-tools/tree/main/reso-data-generator
+  description: >-
+    Realistic test data generator with geo-consistent addresses, relational integrity and
+    field-aware bounds. 116 tests. Seeded into the reference server with the `seed` docker profile.
+  note: >-
+    Synthetic listings only. No real MLS records ship with any RESO tool - licensing forbids it.
+time_simulation:
+  supported: false
+  note: No test-clock facility is published.
+fixtures_and_triggers:
+  entity_event: >-
+    EntityEvent can be enabled on the reference server so change events appear in the feed as you
+    create, update and delete records - the RESO MCP User Guide walks the full loop, including the
+    canary-write "full" mode used by reso-cert entity-event.
+  compliance_scenarios:
+  - {endorsement: Add/Edit (RCP-010), scenarios: 8}
+  - {endorsement: EntityEvent (RCP-027), scenarios: '9-12 depending on mode'}
+hosted_beta:
+  name: RESO Cloud MCP Server
+  url: https://services.reso.org/mcp
+  self_serve: false
+  how_to_get_access: Email dev@reso.org with name, organization and intended use case.
+  eligibility: RESO members and conference attendees (beta)
+  note: >-
+    The closest thing to a hosted playground RESO operates, but it is a broker - it still needs a
+    target RESO server URL and that server's credentials.
