@@ -1,5 +1,47 @@
 # RESO (Real Estate Standards Organization) (reso)
 
+<!-- API-EVANGELIST-PROVENANCE:BEGIN -->
+> ### About this repository
+>
+> **This is not our API.** This repository is an independent, third-party profile of a company's
+> **publicly available** API surface, maintained by [API Evangelist](https://apievangelist.com).
+> API Evangelist does not operate, host, resell, or support this company's APIs, and is not
+> affiliated with or endorsed by the company unless stated on the profile.
+>
+> **Where the information came from.** Everything here is assembled from material a member of the
+> public can reach with a browser and no credentials — the company's own website, developer portal
+> and documentation, the specifications it publishes for public use (OpenAPI, AsyncAPI, JSON Schema,
+> `apis.json`, `llms.txt` and similar), its public repositories, and its public status, pricing and
+> changelog pages. **Nothing here is obtained by breaching a system, defeating an access control, or
+> using credentials of any kind.**
+>
+> **The rating is an independent assessment.** The Kin Score and Agent Readiness rating are
+> independently calculated scores of a company's *public* API artifacts, produced by API Evangelist
+> against a published rubric. They are not certifications, endorsements, security assessments, or
+> audits, and they score published artifacts — not the quality, safety, or security of the software.
+>
+> **Corrections, re-scores, and removal are free.** No partnership, contract, or purchase is
+> required, and you do not need to justify the request.
+>
+> - **Something wrong?** Open an issue on this repository, or email
+>   [info@apievangelist.com](mailto:info@apievangelist.com).
+> - **Published something new?** Ask for a re-score and we will re-run the rating.
+> - **Want the listing taken down?** Say so and we will honor it. The profile is reduced to your
+>   company name, a factual description, and a link to your own site, and the company is recorded as
+>   **unrated** — never scored zero for having asked.
+>
+> **Response times.** Acknowledgement within **one business day**; removal or restriction within
+> **two business days**; corrections and re-scores within **five business days**.
+>
+> **On a security or compliance team?** Email
+> [info@apievangelist.com](mailto:info@apievangelist.com) with *security* in the subject line and
+> you will get a person, not a form. We will tell you exactly which public URLs this profile was
+> built from so your team can see the same surface we did, and we will take the listing down on
+> request while you work through it.
+>
+> Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
+<!-- API-EVANGELIST-PROVENANCE:END -->
+
 RESO, the Real Estate Standards Organization, is the United States industry body that writes and certifies the machine-readable contract for residential real estate data. It publishes the RESO Data Dictionary (the field, enumeration and lookup vocabulary) and the RESO Web API (an OData 4.0/4.01 profile, Web API Core 2.0.0 ratified Jan 2021 and 2.1.0 ratified Dec 2023), plus the RESO Common Format, EntityEvent replication, Push Replication with Webhooks, Validation Expressions and the URN-based Universal Parcel Identifier (UPI). NAR Policy Statement 7.90 requires MLSs owned and operated by associations of REALTORS to implement the Data Dictionary and the Web API and to adopt new releases within one year of ratification, which makes this the only mandated machine-readable API contract in the API Evangelist sector study that is imposed by an industry body rather than a regulator. RESO itself operates no production API and holds no listing data: it certifies other people's servers. Its specifications, reference OData EDMX metadata and Data Dictionary JSON are freely and anonymously downloadable from transport.reso.org and the RESOStandards GitHub organization (a EULA click-through wraps the reso.org copies), and the certification directory at reso.org/certificates and certification.reso.org is public without login. Reachability is the separate fact: a RESO-certified endpoint is run by a local MLS, and credentials for it are issued only after a data licence with that MLS is signed, so certification here means conformance, never public access.
 
 **APIs.json:** [https://raw.githubusercontent.com/api-evangelist/reso/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/reso/refs/heads/main/apis.yml)
