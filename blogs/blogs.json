@@ -6,14 +6,13 @@
       "feed_url": "https://github.com/RESOStandards",
       "title": "",
       "saved": 0,
-      "method": "none",
-      "error": "parse_failed"
+      "method": "none"
     },
     {
       "source": "https://www.reso.org/feed/",
       "feed_url": "https://www.reso.org/feed/",
       "title": "",
-      "saved": 2,
+      "saved": 0,
       "method": "feed"
     },
     {
@@ -24,6 +23,6 @@
       "method": "discovered"
     }
   ],
-  "post_count": 12,
-  "fetched": "2026-08-15T12:11:08Z"
+  "post_count": 14,
+  "fetched": "2026-08-22T20:20:02Z"
 }
