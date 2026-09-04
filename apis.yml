@@ -33,6 +33,20 @@ deliveryModel:
   - repository-unlicensed
   generated: '2026-08-28'
   method: derived
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  - security
+  - sandbox
+  generated: '2026-09-02'
+  method: derived
 image: https://www.reso.org/wp-content/uploads/2021/04/RESO-Logo-Fullname_Horizontal_Blue.png
 tags:
 - Real-Estate
