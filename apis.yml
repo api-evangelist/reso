@@ -22,16 +22,19 @@ description: >-
   credentials for it are issued only after a data licence with that MLS is signed, so
   certification here means conformance, never public access.
 deliveryModel:
-  model: unknown
+  model: saas
+  license_evidence:
+    not_product:
+    - resostandards/reso-tools
   open_source: unknown
   commercial: true
   callable_host: false
-  label: Delivery model not determined — needs a product licence on record
+  label: Hosted service · you call their endpoint
   confidence: low
   source:
   - pricing
-  - repository-unlicensed
-  generated: '2026-08-28'
+  - repository-not-product
+  generated: '2026-09-25'
   method: derived
 accessModel:
   pricing: unknown
@@ -49,7 +52,7 @@ accessModel:
   method: derived
 image: https://www.reso.org/wp-content/uploads/2021/04/RESO-Logo-Fullname_Horizontal_Blue.png
 tags:
-- Real-Estate
+- Real Estate
 - United States
 - RESO
 - MLS
@@ -70,6 +73,7 @@ tags_raw:
 - Industry Body
 - IDX
 - PropTech
+- Real-Estate
 created: '2026-07-26'
 modified: '2026-07-26'
 specificationVersion: '0.23'
