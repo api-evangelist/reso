@@ -1,0 +1,94 @@
+edges:
+- partner_name: npm registry
+  partner: npm
+  partner_match: register
+  type: register
+  direction: provider-built
+  category: official SDK (JavaScript/TypeScript)
+  evidence: https://www.npmjs.com/package/@reso-standards/odata-expression-parser
+  channel: package-registry
+  relationship: distribution-channel
+  contract_reference:
+    register: npm registry (public registry JSON)
+    spec_file: null
+    language: JavaScript/TypeScript
+    packages:
+    - name: '@reso-standards/odata-expression-parser'
+      version: 0.1.0
+      released: '2026-07-19'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@reso-standards/odata-expression-parser
+      repo_leg: github-org:resostandards
+      publisher_leg: email:reso.org
+      matched_by: domain
+    - name: '@reso-standards/reso-certification'
+      version: 0.11.2
+      released: '2026-10-18'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@reso-standards/reso-certification
+      repo_leg: github-org:resostandards
+      publisher_leg: email:reso.org
+      matched_by: domain
+    - name: '@reso-standards/reso-client'
+      version: 0.2.4
+      released: '2026-10-17'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@reso-standards/reso-client
+      repo_leg: github-org:resostandards
+      publisher_leg: email:reso.org
+      matched_by: domain
+    - name: '@reso-standards/reso-common'
+      version: 0.4.1
+      released: '2026-10-14'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@reso-standards/reso-common
+      repo_leg: github-org:resostandards
+      publisher_leg: email:reso.org
+      matched_by: domain
+    - name: '@reso-standards/reso-reference-server'
+      version: 0.8.4
+      released: '2026-10-17'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@reso-standards/reso-reference-server
+      repo_leg: github-org:resostandards
+      publisher_leg: email:reso.org
+      matched_by: domain
+    - name: '@reso-standards/reso-validation'
+      version: 0.1.0
+      released: '2026-07-19'
+      released_field: modified
+      lapsed: false
+      page: https://www.npmjs.com/package/@reso-standards/reso-validation
+      repo_leg: github-org:resostandards
+      publisher_leg: email:reso.org
+      matched_by: domain
+    current: true
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-official-sdks.py
+    detected: '2026-10-18'
+  detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+generated: '2026-10-18'
+method: searched
+source:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
+checked:
+- https://api.nuget.org/v3
+- https://crates.io/api/v1
+- https://proxy.golang.org
+- https://pypi.org/pypi
+- https://registry.npmjs.org
+- https://repo1.maven.org/maven2
+- https://rubygems.org/api/v1
